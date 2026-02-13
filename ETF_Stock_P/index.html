@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETF & 펀드 3개월 추이</title>
+    <style>
+        body { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; background-color: #f4f6f8; margin: 0; padding: 30px; }
+        h1 { text-align: center; color: #111; font-size: 22px; margin-bottom: 40px; font-weight: 700; }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 25px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease-in-out;
+            border: 1px solid #ebedf0;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .title { font-weight: 600; font-size: 16px; color: #333; }
+        .code { font-size: 12px; color: #888; background: #f5f5f5; padding: 4px 8px; border-radius: 6px; }
+
+        .chart-box {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        
+        /* 이미지 스타일링 */
+        .chart-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .note {
+            font-size: 11px;
+            color: #999;
+            margin-top: 12px;
+            line-height: 1.4;
+        }
+        .highlight { color: #3182f6; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1>📅 내 포트폴리오 <span style="color:#3182f6;">3개월 흐름</span></h1>
+
+    <div class="grid-container">
+
+        <div class="card">
+            <div class="card-header">
+                <span class="title">KODEX 헬스케어</span>
+                <span class="code">266420</span>
+            </div>
+            <div class="chart-box">
+                <img src="https://ssl.pstatic.net/imgfinance/chart/item/area/month3/266420.png" class="chart-img">
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="title">ACE 미국배당다우존스</span>
+                <span class="code">402970</span>
+            </div>
+            <div class="chart-box">
+                <img src="https://ssl.pstatic.net/imgfinance/chart/item/area/month3/402970.png" class="chart-img">
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="title">필라델피아반도체 <span style="font-size:12px; font-weight:normal;">(ETF대체)</span></span>
+                <span class="code">381170</span>
+            </div>
+            <div class="chart-box">
+                <img src="https://ssl.pstatic.net/imgfinance/chart/item/area/month3/381170.png" class="chart-img">
+            </div>
+            <div class="note">* 펀드 대신 <span class="highlight">TIGER 미국필라델피아반도체</span> ETF 흐름을 표시합니다.</div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="title">미국장기국채 <span style="font-size:12px; font-weight:normal;">(ETF대체)</span></span>
+                <span class="code">419950</span>
+            </div>
+            <div class="chart-box">
+                <img src="https://ssl.pstatic.net/imgfinance/chart/item/area/month3/419950.png" class="chart-img">
+            </div>
+            <div class="note">* 채권형 펀드 대신 <span class="highlight">ACE 미국30년국채</span> ETF 흐름을 표시합니다.</div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="title">국내 시장(KOSPI 200)</span>
+                <span class="code">069500</span>
+            </div>
+            <div class="chart-box">
+                <img src="https://ssl.pstatic.net/imgfinance/chart/item/area/month3/069500.png" class="chart-img">
+            </div>
+            <div class="note">* 퇴직연금/혼합형 펀드 참고용 <span class="highlight">KODEX 200</span> 지수입니다.</div>
+        </div>
+
+    </div>
+
+    <script>
+        // 3개월 차트이므로 갱신 주기를 10분(600000ms)으로 설정 (자주 바뀔 필요 없음)
+        setInterval(function() {
+            var images = document.getElementsByClassName('chart-img');
+            var timestamp = new Date().getTime();
+            for (var i = 0; i < images.length; i++) {
+                var currentSrc = images[i].src.split('?')[0]; // 기존 파라미터 제거
+                images[i].src = currentSrc + '?t=' + timestamp;
+            }
+        }, 600000); 
+    </script>
+
+</body>
+</html>
