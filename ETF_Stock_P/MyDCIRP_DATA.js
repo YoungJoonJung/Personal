@@ -1,38 +1,212 @@
-window.ETF_DATA = {
+window.MyDCIRP_DATA = {
   "DC": [
-    { name: "ACE AI반도체TOP3+", code: "469150" },
-    { name: "ACE KRX금현물", code: "411060" },
-    { name: "ACE 미국배당다우존스", code: "402970" },
-    { name: "ACE 미국빅테크TOP7 Plus", code: "465580" },
-    { name: "ACE 엔비디아채권혼합", code: "448540" },
-    { name: "KODEX 미국반도체", code: "390390" },
-    { name: "KODEX 삼성전자채권혼합", code: "448330" },
-    { name: "KODEX 헬스케어", code: "266420" },
-    { name: "PLUS K방산", code: "449450" },
-    { name: "PLUS 미국달러SOFR금리액티브(합성)", code: "456200" },
-    { name: "TIGER 200 중공업", code: "139230" },
-    { name: "TIGER 구리실물", code: "160580" },
-    { name: "TIGER 미국테크TOP10 INDXX", code: "381170" },
-    { name: "TIGER 미국필라델피아반도체나스닥", code: "381180" }
+    {
+      "name": "ACE AI반도체TOP3+",
+      "code": "469150",
+      "currentPrice": "68,300",
+      "currentCompare": "+300",
+      "currentRate": "+0.44",
+      "type": "공격",
+      "buyDate": "2026-04-16",
+      "buyPrice": "62,468",
+      "quantity": "38"
+    },
+    {
+      "name": "ACE KRX금현물",
+      "code": "411060",
+      "currentPrice": "31,150",
+      "currentCompare": "+305",
+      "currentRate": "+0.99",
+      "type": "안전",
+      "buyDate": "2026-04-16",
+      "buyPrice": "30,475",
+      "quantity": "83"
+    },
+    {
+      "name": "ACE 미국배당다우존스",
+      "code": "402970",
+      "currentPrice": "14,975",
+      "currentCompare": "+95",
+      "currentRate": "+0.64"
+    },
+    {
+      "name": "ACE 미국빅테크TOP7 Plus",
+      "code": "465580",
+      "currentPrice": "25,220",
+      "currentCompare": "+440",
+      "currentRate": "+1.78"
+    },
+    {
+      "name": "ACE 엔비디아채권혼합",
+      "code": "448540",
+      "currentPrice": "26,455",
+      "currentCompare": "+320",
+      "currentRate": "+1.22"
+    },
+    {
+      "name": "KODEX 미국반도체",
+      "code": "390390",
+      "currentPrice": "54,820",
+      "currentCompare": "+520",
+      "currentRate": "+0.96"
+    },
+    {
+      "name": "KODEX 삼성전자채권혼합",
+      "code": "448330",
+      "currentPrice": "17,110",
+      "currentCompare": "0",
+      "currentRate": "0.00"
+    },
+    {
+      "name": "KODEX 헬스케어",
+      "code": "266420",
+      "currentPrice": "20,640",
+      "currentCompare": "-100",
+      "currentRate": "-0.48"
+    },
+    {
+      "name": "PLUS K방산",
+      "code": "449450",
+      "currentPrice": "73,380",
+      "currentCompare": "-2,220",
+      "currentRate": "-2.94"
+    },
+    {
+      "name": "PLUS 미국달러SOFR금리액티브(합성)",
+      "code": "456200",
+      "currentPrice": "62,845",
+      "currentCompare": "+660",
+      "currentRate": "+1.06"
+    },
+    {
+      "name": "TIGER 200 중공업",
+      "code": "139230",
+      "currentPrice": "20,245",
+      "currentCompare": "-730",
+      "currentRate": "-3.48"
+    },
+    {
+      "name": "TIGER 구리실물",
+      "code": "160580",
+      "currentPrice": "16,115",
+      "currentCompare": "+170",
+      "currentRate": "+1.07"
+    },
+    {
+      "name": "TIGER 미국테크TOP10 INDXX",
+      "code": "381170",
+      "currentPrice": "33,500",
+      "currentCompare": "+655",
+      "currentRate": "+1.99"
+    },
+    {
+      "name": "TIGER 미국필라델피아반도체나스닥",
+      "code": "381180",
+      "currentPrice": "43,450",
+      "currentCompare": "-25",
+      "currentRate": "-0.06"
+    }
   ],
-
   "IRP": [
-    { name: "KODEX 200미국채혼합", code: "284430" },
-    { name: "KODEX AI반도체핵심장비", code: "471990" },
-    { name: "KODEX TRF3070", code: "329650" },
-    { name: "KODEX 미국S&P500에너지(합성)", code: "218420" },
-    { name: "KODEX 미국빅테크10(H)", code: "314250" },
-    { name: "SOL 미국배당미국채혼합50", code: "490490" },
-    { name: "TIGER 글로벌혁신블루칩TOP10", code: "464930" },
-    { name: "TIGER 미국필라델피아반도체나스닥", code: "381180" },
-    { name: "TIGER 코리아배당다우존스", code: "0052D0" }
+    {
+      "name": "KODEX 200미국채혼합",
+      "code": "284430",
+      "currentPrice": "22,370",
+      "currentCompare": "+105",
+      "currentRate": "+0.47"
+    },
+    {
+      "name": "KODEX AI반도체핵심장비",
+      "code": "471990",
+      "currentPrice": "33,150",
+      "currentCompare": "-265",
+      "currentRate": "-0.79"
+    },
+    {
+      "name": "KODEX TRF3070",
+      "code": "329650",
+      "currentPrice": "14,530",
+      "currentCompare": "+65",
+      "currentRate": "+0.45"
+    },
+    {
+      "name": "KODEX 미국S&P500에너지(합성)",
+      "code": "218420",
+      "currentPrice": "18,970",
+      "currentCompare": "-175",
+      "currentRate": "-0.91"
+    },
+    {
+      "name": "KODEX 미국빅테크10(H)",
+      "code": "314250",
+      "currentPrice": "57,335",
+      "currentCompare": "+150",
+      "currentRate": "+0.26"
+    },
+    {
+      "name": "SOL 미국배당미국채혼합50",
+      "code": "490490",
+      "currentPrice": "11,415",
+      "currentCompare": "+100",
+      "currentRate": "+0.88"
+    },
+    {
+      "name": "TIGER 글로벌혁신블루칩TOP10",
+      "code": "464930",
+      "currentPrice": "21,780",
+      "currentCompare": "+250",
+      "currentRate": "+1.16"
+    },
+    {
+      "name": "TIGER 미국필라델피아반도체나스닥",
+      "code": "381180",
+      "currentPrice": "43,450",
+      "currentCompare": "-25",
+      "currentRate": "-0.06"
+    },
+    {
+      "name": "TIGER 코리아배당다우존스",
+      "code": "0052D0",
+      "currentPrice": "16,750",
+      "currentCompare": "+30",
+      "currentRate": "+0.18"
+    }
   ],
-
   "연금저축": [
-    { name: "KODEX 구리선물(H)", code: "138910" },
-    { name: "ACE 미국나스닥100", code: "367380" },
-    { name: "HANARO Fn조선해운", code: "441540" },
-    { name: "ACE AI반도체포커스", code: "469150" },
-    { name: "TIGER 미국테크TOP10채권혼합", code: "472170" }
+    {
+      "name": "KODEX 구리선물(H)",
+      "code": "138910",
+      "currentPrice": "9,725",
+      "currentCompare": "+145",
+      "currentRate": "+1.51"
+    },
+    {
+      "name": "ACE 미국나스닥100",
+      "code": "367380",
+      "currentPrice": "32,145",
+      "currentCompare": "+490",
+      "currentRate": "+1.55"
+    },
+    {
+      "name": "HANARO Fn조선해운",
+      "code": "441540",
+      "currentPrice": "35,770",
+      "currentCompare": "-1,500",
+      "currentRate": "-4.02"
+    },
+    {
+      "name": "ACE AI반도체포커스",
+      "code": "469150",
+      "currentPrice": "68,300",
+      "currentCompare": "+300",
+      "currentRate": "+0.44"
+    },
+    {
+      "name": "TIGER 미국테크TOP10채권혼합",
+      "code": "472170",
+      "currentPrice": "14,470",
+      "currentCompare": "+135",
+      "currentRate": "+0.94"
+    }
   ]
 };
