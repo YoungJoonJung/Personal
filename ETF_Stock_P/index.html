@@ -327,7 +327,7 @@
     }
   </style>
 
-  <!-- ✅ 반드시 파일(MyDCIRP_DATA.js)로 시작 -->
+  <!-- ✅ 실제 파일 로딩 -->
   <script src="./MyDCIRP_DATA.js"></script>
 </head>
 
@@ -355,6 +355,9 @@
       <div class="hint">
         • (변경) 시작 시 localStorage를 <b>리셋</b>하고 MyDCIRP_DATA.js 값으로 <b>치환(최신화)</b>합니다.<br>
         • (변경) 저장 버튼 클릭 시 MyDCIRP_DATA.js 파일을 <b>항상 업데이트</b>합니다(직접 저장 가능 시 덮어쓰기, 아니면 다운로드로 갱신본 제공).<br>
+        • (변경) CSV의 “총 매입액”, “총수익”은 엑셀에서 합계 계산이 되도록 <b>숫자(부호만 포함)</b>로 출력합니다.<br>
+        • (변경) CSV 생성 시 구분(카테고리)이 바뀌면 공백 행을 2행 추가합니다.<br>
+        • (변경) CSV의 “수익율”은 %문자 없이 <b>비율(Float)</b>로 저장합니다. (예: 0.0123 = 1.23%)<br>
         • 그래프 기능 유지: DC/IRP/연금저축 선택 시 아래 그래프 표시 + 종목명 클릭 시 해당 그래프로 스크롤
       </div>
     </div>
@@ -441,15 +444,12 @@ function getData() {
 function safeCodeText(code) { return String(code).replace(/[^0-9A-Z]/g, ""); }
 
 /* ======================
-   ✅ (핵심 변경) 시작 시 localStorage 리셋 → 파일값으로 치환(최신화)
-   - localStorage에 있는 ETF_DASHBOARD__* 키들을 모두 삭제
-   - MyDCIRP_DATA.js 값(파일)을 localStorage에 다시 저장
+   시작 시 localStorage 리셋 → 파일값으로 치환(최신화)
 ====================== */
 function getStorageKey(category, item, field) {
   return "ETF_DASHBOARD__" + field + "__" + category + "__" + item.code + "__" + item.name;
 }
 function resetLocalStorageAndSyncFromFile() {
-  // 1) 기존 대시보드 키 제거
   try {
     var keys = Object.keys(localStorage);
     for (var i=0; i<keys.length; i++){
@@ -457,7 +457,6 @@ function resetLocalStorageAndSyncFromFile() {
     }
   } catch(e){}
 
-  // 2) 파일(MyDCIRP_DATA.js) 값으로 localStorage 재구성
   var data = getData() || {};
   var fields = ["buyPrice","quantity","type","buyDate"];
 
@@ -476,7 +475,10 @@ function resetLocalStorageAndSyncFromFile() {
 }
 
 /* ======================
-   CSV 저장(전체보기) - 유지(요청 반영본)
+   CSV 저장(전체보기)
+   - "총 매입액", "총수익"은 엑셀 SUM 가능한 숫자(부호만 포함)
+   - 구분 변경 시 공백 행 2행 추가
+   - ✅ “수익율”은 % 없이 비율(Float)로 저장 (예: 0.0123 = 1.23%)
 ====================== */
 function csvEscape(value) {
   var s = (value === null || value === undefined) ? "" : String(value);
@@ -500,10 +502,18 @@ function exportAllViewCsv() {
   var lines = [];
   lines.push(["구분","타입","종목명","보유비율","주식수","매수가","현재가","총 매입액","총수익","수익율"].map(csvEscape).join(","));
 
+  var prevCat = null;
+
   for (var i=0; i<__ROWS.length; i++){
     var row = __ROWS[i];
     var cat = row.category;
     var it = row.item;
+
+    if (prevCat !== null && prevCat !== cat) {
+      lines.push("");
+      lines.push("");
+    }
+    prevCat = cat;
 
     var denomBuy = (__CAT_TOTALS[cat] && __CAT_TOTALS[cat].hasBuy) ? __CAT_TOTALS[cat].totalBuy : 0;
 
@@ -513,16 +523,25 @@ function exportAllViewCsv() {
 
     var totalBuy = calculateTotalBuy(buy, qty);
     var profit = calculateTotalProfit(it.currentPrice || "", buy, qty);
-    var roi = calculateRoiPercent(profit, totalBuy);
+    var roi = calculateRoiPercent(profit, totalBuy); // percent 값 (예: 1.23)
+
     var hold = calculateHoldPercent(totalBuy, denomBuy);
 
     var holdText = formatPercent(hold);
     var qtyText = qty ? (String(qty) + "주") : "";
     var buyText = buy ? (buy + "원") : "";
     var nowText = it.currentPrice ? (formatNumber(it.currentPrice) + "원") : "";
-    var totalBuyText = isNaN(totalBuy) ? "" : formatWon(totalBuy);
-    var profitText = isNaN(profit) ? "" : formatSignedWon(profit);
-    var roiText = formatSignedPercent(roi);
+
+    var totalBuyText = isNaN(totalBuy) ? "" : String(Math.round(totalBuy));
+    var profitText = isNaN(profit) ? "" : String(Math.round(profit));
+
+    // ✅ 수익율: % 없이 비율(Float)로 저장 (예: 0.0123)
+    // roi는 퍼센트이므로 100으로 나눔
+    var roiText = "";
+    if (roi !== null && roi !== undefined && isFinite(roi) && !isNaN(roi)) {
+      var ratio = Number(roi) / 100; // 0.0123
+      roiText = String(Number(ratio.toFixed(8))); // 불필요한 0 제거(예: "0.0123")
+    }
 
     lines.push([cat, typeVal, it.name, holdText, qtyText, buyText, nowText, totalBuyText, profitText, roiText].map(csvEscape).join(","));
   }
@@ -707,21 +726,18 @@ function calculateHoldPercent(partBuy, denomBuy) {
 }
 
 /* ======================
-   ✅ (핵심 변경) 값 조회는 '항상 파일(메모리)'만 사용
-   - localStorage는 시작 시 파일값으로 치환(최신화) 했으므로, 실제 화면 계산은 item[field] 기반
-   - 저장 시 localStorage도 함께 갱신(기능 유지)
+   값 조회/저장 (파일/메모리 기반)
 ====================== */
 function normalizeType(raw) { return (raw === "공격") ? "공격" : "안전"; }
 function getTypeClass(typeValue) { return (typeValue === "공격") ? "typeAttack" : "typeSafe"; }
 
 function getSavedField(category, item, fieldName) {
-  // 항상 파일/메모리값만 사용
   if (item[fieldName] !== undefined && item[fieldName] !== null) return String(item[fieldName]);
   return "";
 }
 function setSavedField(category, item, fieldName, value) {
-  item[fieldName] = value; // 메모리 갱신(= 파일로 내보낼 값)
-  localStorage.setItem(getStorageKey(category, item, fieldName), value); // 저장 기능 유지
+  item[fieldName] = value;
+  localStorage.setItem(getStorageKey(category, item, fieldName), value);
 }
 function getBuyPrice(category, item) { return formatPlainNumberWithComma(getSavedField(category, item, "buyPrice")); }
 function getQuantity(category, item) {
@@ -801,7 +817,6 @@ async function ensureWritableHandle() {
   });
   return __dataFileHandle;
 }
-
 async function writeMyDataFileAlways() {
   try {
     var handle = await ensureWritableHandle();
@@ -1077,7 +1092,6 @@ function onSaveRow(rowInfo) {
   buyInput.value = getBuyPrice(cat, it);
   qtyInput.value = getQuantity(cat, it);
 
-  // localStorage는 저장 기능 유지(이미 setSavedField에서 기록)
   recomputeViewTotals();
   for (var i=0; i<__ROWS.length; i++){
     updateRow(__ROWS[i], false);
@@ -1096,7 +1110,7 @@ function onSaveRow(rowInfo) {
 }
 
 /* ======================
-   표 row 빌드 / 합계 row 생성
+   표 row 빌드 / 합계 row 생성 / 그래프 기능 (유지)
 ====================== */
 function buildRowsForScope(scope) {
   var data = getData();
@@ -1605,9 +1619,6 @@ document.getElementById("chartType").addEventListener("change", function(){
 
 /* ======================
    ✅ 초기 실행 순서 (중요)
-   1) 파일(MyDCIRP_DATA.js) 로드됨
-   2) localStorage 리셋 + 파일값으로 치환(최신화)
-   3) 콤보/렌더
 ====================== */
 resetLocalStorageAndSyncFromFile();
 initCategoryCombo();
