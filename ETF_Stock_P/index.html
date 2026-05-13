@@ -405,12 +405,10 @@
 
       <div class="hint">
         • 현재가는 한국투자증권 KIS Open API Apps Script에서 내려주는 <b>json.now</b> 값을 사용합니다.<br>
-        • <b>1단계 변경:</b> 여러 종목을 동시에 조회하지 않고, 종목을 하나씩 천천히 순차 조회합니다.<br>
-        • 조회 간격은 HTML의 <b>PRICE_REQUEST_DELAY_MS</b> 값으로 조절합니다.<br>
+        • 여러 종목을 동시에 조회하지 않고, 종목을 하나씩 순차 조회합니다.<br>
         • 시작 시 localStorage를 리셋하고 MyDCIRP_DATA.js 값으로 치환합니다.<br>
-        • CSV의 “총 매입액”, “총수익”은 엑셀 합계 계산이 되도록 숫자로 출력합니다.<br>
-        • CSV 생성 시 구분이 바뀌면 공백 행을 2행 추가합니다.<br>
-        • CSV의 “수익율”은 %문자 없이 비율(Float)로 저장합니다. 예: 0.0123 = 1.23%
+        • 합계 행의 수익률은 <b>총수익 / 총 매입액</b> 기준으로 표시합니다.<br>
+        • CSV 저장 시 각 구분별 마지막에 합계 행을 추가합니다.
       </div>
     </div>
   </div>
@@ -434,17 +432,8 @@
   </div>
 
   <script>
-    /*
-      한국투자증권 API용 Apps Script 배포 URL로 변경하세요.
-    */
-    var GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwEgzdCJnia1K97P3DtibRvmn9N3-3NbiTlvoQq6h6TJQ62Q4fiHBpftsls35T9X4NYtQ/exec";
-
-    /*
-      1단계 핵심 설정
-      - 실전투자: 400~700 권장
-      - 모의투자: 800~1200 권장
-    */
-    var PRICE_REQUEST_DELAY_MS = 100;
+    var GAS_WEB_APP_URL = "https://script.google.com/macros/s/여기에_배포_ID_입력/exec";
+    var PRICE_REQUEST_DELAY_MS = 350;
 
     var RENDER_TOKEN = 0;
     var __VIEW_SCOPE = "전체보기";
@@ -469,7 +458,6 @@
 
         o.type = "sawtooth";
         g.gain.value = 0.03;
-
         o.connect(g);
         g.connect(ctx.destination);
 
@@ -506,7 +494,6 @@
 
     function notifyRenderedSirenOnce() {
       if (__SIREN_PLAYED) return;
-
       __SIREN_PLAYED = true;
 
       var ok = playAmbulanceSiren();
@@ -593,7 +580,28 @@
       URL.revokeObjectURL(url);
     }
 
+    function formatCsvRoiRatio(totalProfit, totalBuy) {
+      if (!isFinite(totalProfit) || isNaN(totalProfit)) return "";
+      if (!isFinite(totalBuy) || isNaN(totalBuy) || totalBuy === 0) return "";
+
+      var ratio = totalProfit / totalBuy;
+      return String(Number(ratio.toFixed(8)));
+    }
+
+    function buildSafeAttackRatioText(safeBuy, attackBuy) {
+      var safe = isFinite(safeBuy) ? safeBuy : 0;
+      var attack = isFinite(attackBuy) ? attackBuy : 0;
+      var total = safe + attack;
+
+      var safePct = formatPercent(calculateHoldPercent(safe, total));
+      var attackPct = formatPercent(calculateHoldPercent(attack, total));
+
+      return "안전 " + safePct + " / 공격 " + attackPct;
+    }
+
     function exportAllViewCsv() {
+      recomputeViewTotals();
+
       var lines = [];
 
       lines.push([
@@ -611,19 +619,53 @@
 
       var prevCat = null;
 
+      function appendCategoryTotalCsvLine(category) {
+        var totalInfo = __CAT_TOTALS[category];
+
+        if (!totalInfo) return;
+
+        var totalBuy = totalInfo.hasBuy ? totalInfo.totalBuy : 0;
+        var totalProfit = totalInfo.hasProfit ? totalInfo.totalProfit : 0;
+
+        var safeAttackRatioText = buildSafeAttackRatioText(
+          totalInfo.safeBuy,
+          totalInfo.attackBuy
+        );
+
+        var totalBuyText = totalInfo.hasBuy ? String(Math.round(totalBuy)) : "";
+        var totalProfitText = totalInfo.hasProfit ? String(Math.round(totalProfit)) : "";
+        var totalRoiText = formatCsvRoiRatio(totalProfit, totalBuy);
+
+        lines.push([
+          category,
+          "합계",
+          "합계",
+          safeAttackRatioText,
+          "",
+          "",
+          "",
+          totalBuyText,
+          totalProfitText,
+          totalRoiText
+        ].map(csvEscape).join(","));
+      }
+
       for (var i = 0; i < __ROWS.length; i++) {
         var row = __ROWS[i];
         var cat = row.category;
         var it = row.item;
 
         if (prevCat !== null && prevCat !== cat) {
+          appendCategoryTotalCsvLine(prevCat);
           lines.push("");
           lines.push("");
         }
 
         prevCat = cat;
 
-        var denomBuy = (__CAT_TOTALS[cat] && __CAT_TOTALS[cat].hasBuy) ? __CAT_TOTALS[cat].totalBuy : 0;
+        var denomBuy = (__CAT_TOTALS[cat] && __CAT_TOTALS[cat].hasBuy)
+          ? __CAT_TOTALS[cat].totalBuy
+          : 0;
 
         var typeVal = getType(cat, it);
         var buy = getBuyPrice(cat, it);
@@ -643,7 +685,6 @@
         var profitText = isNaN(profit) ? "" : String(Math.round(profit));
 
         var roiText = "";
-
         if (roi !== null && roi !== undefined && isFinite(roi) && !isNaN(roi)) {
           var ratio = Number(roi) / 100;
           roiText = String(Number(ratio.toFixed(8)));
@@ -661,6 +702,10 @@
           profitText,
           roiText
         ].map(csvEscape).join(","));
+      }
+
+      if (prevCat !== null) {
+        appendCategoryTotalCsvLine(prevCat);
       }
 
       var filename = "DCIRP_" + getTodayYYYYMMDD() + ".csv";
@@ -1167,7 +1212,7 @@
         it.currentRate = "";
 
         onAfterUpdate(true);
-      }, 12000);
+      }, 6000);
 
       script.src = getPriceJsonpUrl(it.code, cbName);
       document.body.appendChild(script);
@@ -1391,22 +1436,36 @@
         var t = __CAT_TOTALS[cat];
 
         var bd = document.getElementById("catTotalBreak__" + cat);
-        if (bd) bd.textContent = buildTypeBreakdownText(t.safeBuy, t.attackBuy);
+        if (bd) {
+          bd.textContent = buildTypeBreakdownText(t.safeBuy, t.attackBuy);
+        }
 
         var buyCell = document.getElementById("catTotalBuy__" + cat);
-        if (buyCell) buyCell.textContent = formatWon(t.totalBuy);
+        if (buyCell) {
+          buyCell.textContent = formatWon(t.totalBuy);
+        }
 
         var profitCell = document.getElementById("catTotalProfit__" + cat);
-        if (profitCell) setMoneyCell(profitCell, t.totalProfit);
+        if (profitCell) {
+          setMoneyCell(profitCell, t.totalProfit);
+        }
 
         var holdCell = document.getElementById("catTotalHold__" + cat);
-        if (holdCell) holdCell.textContent = "100.00%";
+        if (holdCell) {
+          holdCell.textContent = "100.00%";
+        }
 
         var roiCell = document.getElementById("catTotalRoi__" + cat);
-        if (roiCell) roiCell.textContent = "";
+        if (roiCell) {
+          var catRoi = calculateRoiPercent(t.totalProfit, t.totalBuy);
+          roiCell.className = "tdRight " + getProfitClass(t.totalProfit);
+          roiCell.textContent = formatSignedPercent(catRoi);
+        }
 
         var dailyCell = document.getElementById("catTotalDaily__" + cat);
-        if (dailyCell) dailyCell.textContent = "";
+        if (dailyCell) {
+          dailyCell.textContent = "";
+        }
       }
 
       var gBuy = 0;
@@ -1419,6 +1478,7 @@
         if (!__CAT_TOTALS.hasOwnProperty(c)) continue;
 
         hasAny = true;
+
         gBuy += (__CAT_TOTALS[c].hasBuy ? __CAT_TOTALS[c].totalBuy : 0);
         gProfit += (__CAT_TOTALS[c].hasProfit ? __CAT_TOTALS[c].totalProfit : 0);
         gSafe += (__CAT_TOTALS[c].safeBuy || 0);
@@ -1426,22 +1486,36 @@
       }
 
       var gBreak = document.getElementById("grandTotalBreak");
-      if (gBreak) gBreak.textContent = buildTypeBreakdownText(gSafe, gAtk);
+      if (gBreak) {
+        gBreak.textContent = buildTypeBreakdownText(gSafe, gAtk);
+      }
 
       var gBuyCell = document.getElementById("grandTotalBuy");
-      if (gBuyCell) gBuyCell.textContent = hasAny ? formatWon(gBuy) : "-";
+      if (gBuyCell) {
+        gBuyCell.textContent = hasAny ? formatWon(gBuy) : "-";
+      }
 
       var gProfitCell = document.getElementById("grandTotalProfit");
-      if (gProfitCell) setMoneyCell(gProfitCell, hasAny ? gProfit : NaN);
+      if (gProfitCell) {
+        setMoneyCell(gProfitCell, hasAny ? gProfit : NaN);
+      }
 
       var gHoldCell = document.getElementById("grandTotalHold");
-      if (gHoldCell) gHoldCell.textContent = "100.00%";
+      if (gHoldCell) {
+        gHoldCell.textContent = "100.00%";
+      }
 
       var gRoiCell = document.getElementById("grandTotalRoi");
-      if (gRoiCell) gRoiCell.textContent = "";
+      if (gRoiCell) {
+        var grandRoi = calculateRoiPercent(gProfit, gBuy);
+        gRoiCell.className = "tdRight " + getProfitClass(gProfit);
+        gRoiCell.textContent = formatSignedPercent(grandRoi);
+      }
 
       var gDailyCell = document.getElementById("grandTotalDaily");
-      if (gDailyCell) gDailyCell.textContent = "";
+      if (gDailyCell) {
+        gDailyCell.textContent = "";
+      }
     }
 
     function onSaveRow(rowInfo) {
