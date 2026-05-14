@@ -51,6 +51,23 @@
       margin-right: 8px;
     }
 
+    .csvBtn {
+      border-radius: 999px;
+      border: 1px solid #1d72b8;
+      background: #1d72b8;
+      color: #fff;
+      padding: 5px 12px;
+      font-size: 13px;
+      line-height: 1.4;
+      box-shadow: 0 3px 8px rgba(29, 114, 184, 0.16);
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .csvBtn:hover {
+      background: #145a97;
+      transform: translateY(-1px);
+    }
+
     .hint {
       color: #666;
       font-size: 12px;
@@ -78,8 +95,8 @@
     .tableTitleRow {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 10px;
+      justify-content: flex-start;
+      gap: 32px;
       margin-bottom: 8px;
     }
 
@@ -97,10 +114,10 @@
     }
 
     table {
-      width: 100%;
+      width: auto;
       border-collapse: collapse;
       font-size: 13px;
-      min-width: 1780px;
+      table-layout: auto;
     }
 
     thead th {
@@ -256,6 +273,18 @@
     .profitFlat {
       color: #555;
       font-weight: 700;
+    }
+
+    .sortableHeader {
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .sortArrow {
+      margin-left: 6px;
+      font-size: 0.85em;
+      color: #555;
     }
 
     .compareUp {
@@ -433,12 +462,16 @@
 
   <script>
     var GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwEgzdCJnia1K97P3DtibRvmn9N3-3NbiTlvoQq6h6TJQ62Q4fiHBpftsls35T9X4NYtQ/exec";
-    var PRICE_REQUEST_DELAY_MS = 50;
+    var PRICE_REQUEST_DELAY_MS = 100;          // 종목별 가격 조회 시 요청 간 최소 지연 시간 (ms)
+    var PRICE_REQUEST_CONCURRENCY = 5;       // 종목별 가격 조회 시 최대 동시 요청 수
+    var PRICE_REQUEST_MAX_RETRY = 3;         // 종목별 가격 조회 시 실패한 요청의 최대 재시도 횟수
 
     var RENDER_TOKEN = 0;
     var __VIEW_SCOPE = "전체보기";
     var __ROWS = [];
     var __CAT_TOTALS = {};
+    var __SORT_FIELD = "hold";
+    var __SORT_ASC = false;
     var __SIREN_PLAYED = false;
 
     function sleep(ms) {
@@ -509,6 +542,91 @@
       if (window.MyDCIRP_DATA) return window.MyDCIRP_DATA;
       if (window.ETF_DATA) return window.ETF_DATA;
       return {};
+    }
+
+    function getRowSortValue(row, field) {
+      if (!row || !field) return null;
+
+      if (field === "name") {
+        return String((row.item && row.item.name) || "").toLowerCase();
+      }
+
+      if (field === "hold") {
+        var buy = getBuyPrice(row.category, row.item);
+        var qty = getQuantity(row.category, row.item);
+        var totalBuy = calculateTotalBuy(buy, qty);
+        var denomBuy = (__CAT_TOTALS[row.category] && __CAT_TOTALS[row.category].hasBuy) ? __CAT_TOTALS[row.category].totalBuy : 0;
+        var hold = calculateHoldPercent(totalBuy, denomBuy);
+        return isFinite(hold) ? hold : null;
+      }
+
+      return null;
+    }
+
+    function compareSortValues(a, b) {
+      if (a === b) return 0;
+      if (a === null || a === undefined || a === "") return 1;
+      if (b === null || b === undefined || b === "") return -1;
+      if (typeof a === "string" && typeof b === "string") {
+        return a.localeCompare(b);
+      }
+      if (typeof a === "number" && typeof b === "number") {
+        return a - b;
+      }
+      return String(a).localeCompare(String(b));
+    }
+
+    function applyRowSorting(rows, scope) {
+      if (!__SORT_FIELD || !rows || rows.length === 0) return;
+
+      function sortArray(arr) {
+        arr.sort(function (a, b) {
+          var va = getRowSortValue(a, __SORT_FIELD);
+          var vb = getRowSortValue(b, __SORT_FIELD);
+          var cmp = compareSortValues(va, vb);
+          return __SORT_ASC ? cmp : -cmp;
+        });
+      }
+
+      if (scope === "전체보기") {
+        var grouped = {};
+        var categoryOrder = [];
+
+        for (var i = 0; i < rows.length; i++) {
+          var row = rows[i];
+          if (!grouped[row.category]) {
+            grouped[row.category] = [];
+            categoryOrder.push(row.category);
+          }
+          grouped[row.category].push(row);
+        }
+
+        rows.length = 0;
+
+        for (var j = 0; j < categoryOrder.length; j++) {
+          var cat = categoryOrder[j];
+          sortArray(grouped[cat]);
+          rows.push.apply(rows, grouped[cat]);
+        }
+      } else {
+        sortArray(rows);
+      }
+    }
+
+    function toggleSort(field) {
+      if (__SORT_FIELD === field) {
+        __SORT_ASC = !__SORT_ASC;
+      } else {
+        __SORT_FIELD = field;
+        __SORT_ASC = true;
+      }
+    }
+
+    function buildSortArrow(field) {
+      if (__SORT_FIELD === field) {
+        return '<span class="sortArrow">' + (__SORT_ASC ? "▲" : "▼") + '</span>';
+      }
+      return '<span class="sortArrow">⇵</span>';
     }
 
     function safeCodeText(code) {
@@ -677,9 +795,12 @@
         var hold = calculateHoldPercent(totalBuy, denomBuy);
 
         var holdText = formatPercent(hold);
-        var qtyText = qty ? (String(qty) + "주") : "";
-        var buyText = buy ? (buy + "원") : "";
-        var nowText = it.currentPrice ? (formatNumber(it.currentPrice) + "원") : "";
+        var holdCsvText = isFinite(hold) ? String(hold.toFixed(2)) : "";
+        var qtyText = qty ? String(qty) : "";
+        var buyNum = toNumber(buy);
+        var buyText = isFinite(buyNum) ? String(Math.round(buyNum)) : "";
+        var nowNum = toNumber(it.currentPrice);
+        var nowText = isFinite(nowNum) ? String(Math.round(nowNum)) : "";
 
         var totalBuyText = isNaN(totalBuy) ? "" : String(Math.round(totalBuy));
         var profitText = isNaN(profit) ? "" : String(Math.round(profit));
@@ -694,7 +815,7 @@
           cat,
           typeVal,
           it.name,
-          holdText,
+          holdCsvText,
           qtyText,
           buyText,
           nowText,
@@ -1226,40 +1347,94 @@
       });
     }
 
-    async function fetchPricesSequentially(rows, token, headersLength) {
+    async function fetchPricesConcurrently(rows, token, headersLength) {
       var status = document.getElementById("status");
+      var completedRows = 0;
+      var taskQueue = rows.slice();
+      var activeCount = 0;
 
-      for (var i = 0; i < rows.length; i++) {
+      function updateStatus() {
+        if (!status || token !== RENDER_TOKEN) return;
+        status.textContent = "현재가 조회 중... " + completedRows + " / " + rows.length;
+      }
+
+      async function processTask(rowInfo) {
         if (token !== RENDER_TOKEN) return;
-
-        var ri = rows[i];
-
-        if (status) {
-          status.textContent = "현재가 조회 중... " + (i + 1) + " / " + rows.length;
-        }
 
         var isErr = true;
 
         try {
-          isErr = await fetchPriceForRowPromise(ri, token);
+          isErr = await fetchPriceForRowPromise(rowInfo, token);
         } catch (e) {
           isErr = true;
         }
 
         if (token !== RENDER_TOKEN) return;
 
-        updateRow(ri, isErr);
+        if (!isErr) {
+          rowInfo.fetchRetryCount = 0;
+          updateRow(rowInfo, false);
+          completedRows++;
+        } else {
+          rowInfo.fetchRetryCount = (rowInfo.fetchRetryCount || 0) + 1;
+
+          if (rowInfo.fetchRetryCount < PRICE_REQUEST_MAX_RETRY) {
+            taskQueue.push(rowInfo);
+          } else {
+            updateRow(rowInfo, true);
+            completedRows++;
+          }
+        }
+
         recomputeViewTotals();
         updateTotalsRow(headersLength);
 
-        await sleep(PRICE_REQUEST_DELAY_MS);
+        if (PRICE_REQUEST_DELAY_MS > 0) {
+          await sleep(PRICE_REQUEST_DELAY_MS);
+        }
       }
 
-      if (token === RENDER_TOKEN && status) {
-        status.textContent = (__VIEW_SCOPE === "전체보기")
-          ? "전체보기 표시 중"
-          : (__VIEW_SCOPE + " 표시 중");
-      }
+      return new Promise(function (resolve) {
+        function maybeStartNext() {
+          if (token !== RENDER_TOKEN) return;
+
+          while (activeCount < PRICE_REQUEST_CONCURRENCY && taskQueue.length > 0) {
+            var rowInfo = taskQueue.shift();
+            activeCount++;
+
+            (function (row) {
+              processTask(row).then(function () {
+                activeCount--;
+                updateStatus();
+
+                if (token !== RENDER_TOKEN) return;
+                if (taskQueue.length === 0 && activeCount === 0) {
+                  if (token === RENDER_TOKEN && status) {
+                    status.textContent = (__VIEW_SCOPE === "전체보기")
+                      ? "전체보기 표시 중"
+                      : (__VIEW_SCOPE + " 표시 중");
+                  }
+                  resolve();
+                } else {
+                  maybeStartNext();
+                }
+              });
+            })(rowInfo);
+          }
+
+          if (activeCount === 0 && taskQueue.length === 0) {
+            if (token === RENDER_TOKEN && status) {
+              status.textContent = (__VIEW_SCOPE === "전체보기")
+                ? "전체보기 표시 중"
+                : (__VIEW_SCOPE + " 표시 중");
+            }
+            resolve();
+          }
+        }
+
+        updateStatus();
+        maybeStartNext();
+      });
     }
 
     function buildTypeBreakdownText(safeBuy, attackBuy) {
@@ -1599,7 +1774,8 @@
               category: cat,
               index: i,
               item: items[i],
-              rowKey: makeRowKey(cat, i, items[i].code)
+              rowKey: makeRowKey(cat, i, items[i].code),
+              fetchRetryCount: 0
             });
           }
         }
@@ -1614,7 +1790,8 @@
           category: scope,
           index: j,
           item: items2[j],
-          rowKey: makeRowKey(scope, j, items2[j].code)
+          rowKey: makeRowKey(scope, j, items2[j].code),
+          fetchRetryCount: 0
         });
       }
 
@@ -1838,6 +2015,7 @@
       __ROWS = buildRowsForScope(scope);
 
       recomputeViewTotals();
+      applyRowSorting(__ROWS, scope);
 
       var isAllView = scope === "전체보기";
       var title = document.getElementById("tableTitle");
@@ -1855,6 +2033,7 @@
         chartWrap.style.display = "none";
 
         var csvBtn = document.createElement("button");
+        csvBtn.className = "csvBtn";
         csvBtn.type = "button";
         csvBtn.textContent = "CSV 저장";
         csvBtn.onclick = exportAllViewCsv;
@@ -1867,26 +2046,40 @@
       var thead = document.createElement("thead");
       var trh = document.createElement("tr");
       var headers = [
-        "구분",
-        "타입",
-        "종목명",
-        "매입일",
-        "보유일",
-        "현재가",
-        "전일대비 증감",
-        "매수가",
-        "주식수",
-        "총 매입액",
-        "총수익",
-        "보유비율",
-        "수익률",
-        "일수익율",
-        "저장"
+        { label: "구분" },
+        { label: "타입" },
+        { label: "종목명", field: "name" },
+        { label: "매입일" },
+        { label: "보유일" },
+        { label: "현재가" },
+        { label: "전일대비 증감" },
+        { label: "매수가" },
+        { label: "주식수" },
+        { label: "총 매입액" },
+        { label: "총수익" },
+        { label: "보유비율", field: "hold" },
+        { label: "수익률" },
+        { label: "일수익율" },
+        { label: "저장" }
       ];
 
       for (var i = 0; i < headers.length; i++) {
+        var header = headers[i];
         var th = document.createElement("th");
-        th.textContent = headers[i];
+
+        if (header.field) {
+          th.className = "sortableHeader";
+          th.innerHTML = header.label + buildSortArrow(header.field);
+          th.onclick = (function (field) {
+            return function () {
+              toggleSort(field);
+              render();
+            };
+          })(header.field);
+        } else {
+          th.textContent = header.label;
+        }
+
         trh.appendChild(th);
       }
 
@@ -2122,7 +2315,7 @@
 
       updateTotalsRow(headers.length);
 
-      fetchPricesSequentially(__ROWS, token, headers.length);
+      fetchPricesConcurrently(__ROWS, token, headers.length);
     }
 
     function render() {
