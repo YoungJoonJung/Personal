@@ -423,11 +423,11 @@
             console.log('검색 정보:', { origin, dest, depDate, retDate });
 
             // 각 사이트별로 별도의 윈도우에서 열기
-            const bookingUrl = `https://flights.booking.com/flights/${origin}.CITY-${dest}.CITY/?type=ROUNDTRIP&adults=1&cabinClass=ECONOMY&depart=${depDate}&return=${retDate}&stops=0&sort=CHEAPEST`;
+            const bookingUrl = `https://flights.booking.com/flights/${origin}.CITY-${dest}.CITY/?origin=${origin}&destination=${dest}&type=ROUNDTRIP&adults=1&cabinClass=ECONOMY&depart=${depDate}&return=${retDate}&stops=0&sort=CHEAPEST`;
             console.log('부킹닷컴:', bookingUrl);
             window.open(bookingUrl, 'booking_' + Date.now());
 
-            const naverUrl = `https://flight.naver.com/flights/search?type=round&departure=${origin}&arrival=${dest}&startDate=${depDateYYYYMMDD}&returnDate=${retDateYYYYMMDD}&adult=1&child=0&infant=0&isDirect=true`;
+            const naverUrl = `https://flight.naver.com/flights/international/${origin}:city-${dest}:city-${depDateYYYYMMDD}/${dest}:city-${origin}:city-${retDateYYYYMMDD}?adult=1&fareType=Y&isDirect=true`;
             console.log('네이버:', naverUrl);
             window.open(naverUrl, 'naver_' + Date.now());
 
@@ -435,7 +435,8 @@
             console.log('스카이스캐너:', skyscannerUrl);
             window.open(skyscannerUrl, 'skyscanner_' + Date.now());
 
-            const googleUrl = `https://www.google.com/travel/flights?q=Flights+from+${origin}+to+${dest}+on+${depDate}+back+${retDate}`;
+            const googleQuery = encodeURIComponent(`Flights from ${origin} to ${dest} on ${depDate} return ${retDate}`);
+            const googleUrl = `https://www.google.com/travel/flights?hl=ko&gl=KR&q=${googleQuery}`;
             console.log('구글:', googleUrl);
             window.open(googleUrl, 'google_' + Date.now());
         }
