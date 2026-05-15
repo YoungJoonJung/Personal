@@ -13,7 +13,7 @@
         }
 
         .container {
-            max-width: 500px;
+            max-width: 650px;
             margin: auto;
             border: 1px solid #ccc;
             padding: 20px;
@@ -22,6 +22,24 @@
 
         .input-group {
             margin-bottom: 15px;
+        }
+
+        .trip-type-group {
+            display: flex;
+            gap: 1.25rem;
+            flex-wrap: nowrap;
+            align-items: center;
+            width: 100%;
+            justify-content: flex-start;
+            white-space: nowrap;
+        }
+
+        .trip-type-group label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: normal;
+            white-space: nowrap;
         }
 
         label {
@@ -116,6 +134,14 @@
             <label>도착지 (IATA 코드 또는 공항명 검색)</label>
             <input type="text" id="destination" placeholder="공항명, 도시, IATA 코드로 검색" autocomplete="off">
             <div class="airport-dropdown" id="destinationDropdown"></div>
+        </div>
+
+        <div class="input-group">
+            <label>여정 선택</label>
+            <div class="trip-type-group">
+                <label><input type="checkbox" id="roundtrip" checked> 왕복</label>
+                <label><input type="checkbox" id="oneway"> 편도</label>
+            </div>
         </div>
 
         <div class="input-group">
@@ -401,6 +427,23 @@
             return partial ? partial.code : '';
         }
 
+        function updateTripTypeState(type) {
+            const roundtripCheckbox = document.getElementById('roundtrip');
+            const onewayCheckbox = document.getElementById('oneway');
+            const retDateInput = document.getElementById('retDate');
+
+            if (type === 'oneway') {
+                roundtripCheckbox.checked = false;
+                onewayCheckbox.checked = true;
+                retDateInput.disabled = true;
+                retDateInput.value = '';
+            } else {
+                roundtripCheckbox.checked = true;
+                onewayCheckbox.checked = false;
+                retDateInput.disabled = false;
+            }
+        }
+
         function searchFlights() {
             const originValue = document.getElementById('origin').value;
             const destValue = document.getElementById('destination').value;
@@ -408,34 +451,37 @@
             const dest = getAirportCode(destValue);
             const depDate = document.getElementById('depDate').value;
             const retDate = document.getElementById('retDate').value;
+            const tripType = document.getElementById('oneway').checked ? 'ONEWAY' : 'ROUNDTRIP';
 
-            if (!origin || !dest || !depDate || !retDate) {
+            if (!origin || !dest || !depDate || (tripType === 'ROUNDTRIP' && !retDate)) {
                 alert('모든 정보를 입력해주세요. 공항 검색 결과에서 공항을 선택하거나 IATA 코드를 입력하세요.');
                 return;
             }
 
-            // 날짜 포맷 변환
             const depDateYYYYMMDD = depDate.replace(/-/g, '');
-            const retDateYYYYMMDD = retDate.replace(/-/g, '');
-            const depDateYYMMDD = depDate.replace(/-/g, '').slice(2);
-            const retDateYYMMDD = retDate.replace(/-/g, '').slice(2);
+            const depDateYYMMDD = depDateYYYYMMDD.slice(2);
+            const retDateYYYYMMDD = retDate ? retDate.replace(/-/g, '') : '';
+            const retDateYYMMDD = retDateYYYYMMDD ? retDateYYYYMMDD.slice(2) : '';
 
-            console.log('검색 정보:', { origin, dest, depDate, retDate });
+            console.log('검색 정보:', { origin, dest, depDate, retDate, tripType });
 
-            // 각 사이트별로 별도의 윈도우에서 열기
-            const bookingUrl = `https://flights.booking.com/flights/${origin}.CITY-${dest}.CITY/?origin=${origin}&destination=${dest}&type=ROUNDTRIP&adults=1&cabinClass=ECONOMY&depart=${depDate}&return=${retDate}&stops=0&sort=CHEAPEST`;
+            const bookingUrl = `https://flights.booking.com/flights/${origin}.CITY-${dest}.CITY/?origin=${origin}&destination=${dest}&type=${tripType}&adults=1&cabinClass=ECONOMY&depart=${depDate}${tripType === 'ROUNDTRIP' ? `&return=${retDate}` : ''}&stops=0&sort=CHEAPEST`;
             console.log('부킹닷컴:', bookingUrl);
             window.open(bookingUrl, 'booking_' + Date.now());
 
-            const naverUrl = `https://flight.naver.com/flights/international/${origin}:city-${dest}:city-${depDateYYYYMMDD}/${dest}:city-${origin}:city-${retDateYYYYMMDD}?adult=1&fareType=Y&isDirect=true`;
+            const naverUrl = tripType === 'ROUNDTRIP'
+                ? `https://flight.naver.com/flights/international/${origin}:city-${dest}:city-${depDateYYYYMMDD}/${dest}:city-${origin}:city-${retDateYYYYMMDD}?adult=1&fareType=Y&isDirect=true&trip=${tripType.toLowerCase()}`
+                : `https://flight.naver.com/flights/international/${origin}:city-${dest}:city-${depDateYYYYMMDD}?adult=1&fareType=Y&isDirect=true&trip=${tripType.toLowerCase()}`;
             console.log('네이버:', naverUrl);
             window.open(naverUrl, 'naver_' + Date.now());
 
-            const skyscannerUrl = `https://www.skyscanner.co.kr/transport/flights/${origin}/${dest}/${depDateYYMMDD}/${retDateYYMMDD}`;
+            const skyscannerUrl = `https://www.skyscanner.co.kr/transport/flights/${origin.toLowerCase()}/${dest.toLowerCase()}/${depDateYYMMDD}/?adultsv2=1&cabinclass=economy&childrenv2=&inboundaltsenabled=false&outboundaltsenabled=false&preferdirects=true&rtn=${tripType === 'ROUNDTRIP' ? '1' : '0'}#/results`;
             console.log('스카이스캐너:', skyscannerUrl);
             window.open(skyscannerUrl, 'skyscanner_' + Date.now());
 
-            const googleQuery = encodeURIComponent(`Flights from ${origin} to ${dest} on ${depDate} return ${retDate}`);
+            const googleQuery = tripType === 'ROUNDTRIP'
+                ? encodeURIComponent(`Round-trip flights from ${origin} to ${dest} on ${depDate} return ${retDate}`)
+                : encodeURIComponent(`One-way flights from ${origin} to ${dest} on ${depDate}`);
             const googleUrl = `https://www.google.com/travel/flights?hl=ko&gl=KR&q=${googleQuery}`;
             console.log('구글:', googleUrl);
             window.open(googleUrl, 'google_' + Date.now());
@@ -444,6 +490,24 @@
         document.addEventListener('DOMContentLoaded', function () {
             attachAirportSearch('origin', 'originDropdown');
             attachAirportSearch('destination', 'destinationDropdown');
+
+            document.getElementById('roundtrip').addEventListener('change', function () {
+                if (this.checked) {
+                    updateTripTypeState('roundtrip');
+                } else if (!document.getElementById('oneway').checked) {
+                    updateTripTypeState('roundtrip');
+                }
+            });
+
+            document.getElementById('oneway').addEventListener('change', function () {
+                if (this.checked) {
+                    updateTripTypeState('oneway');
+                } else if (!document.getElementById('roundtrip').checked) {
+                    updateTripTypeState('roundtrip');
+                }
+            });
+
+            updateTripTypeState('roundtrip');
         });
     </script>
 
