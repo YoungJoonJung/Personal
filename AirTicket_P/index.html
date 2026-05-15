@@ -136,151 +136,172 @@
 
     <script>
         const airports = [
-            { code: 'ICN', name: 'Incheon International Airport', city: 'Seoul', country: 'South Korea' },
-            { code: 'GMP', name: 'Gimpo International Airport', city: 'Seoul', country: 'South Korea' },
-            { code: 'PUS', name: 'Gimhae International Airport', city: 'Busan', country: 'South Korea' },
-            { code: 'CJU', name: 'Jeju International Airport', city: 'Jeju', country: 'South Korea' },
-            { code: 'NRT', name: 'Narita International Airport', city: 'Tokyo', country: 'Japan' },
-            { code: 'HND', name: 'Tokyo Haneda Airport', city: 'Tokyo', country: 'Japan' },
-            { code: 'HKG', name: 'Hong Kong International Airport', city: 'Hong Kong', country: 'China' },
-            { code: 'TPE', name: 'Taiwan Taoyuan International Airport', city: 'Taipei', country: 'Taiwan' },
-            { code: 'SIN', name: 'Singapore Changi Airport', city: 'Singapore', country: 'Singapore' },
-            { code: 'BKK', name: 'Suvarnabhumi Airport', city: 'Bangkok', country: 'Thailand' },
-            { code: 'KUL', name: 'Kuala Lumpur International Airport', city: 'Kuala Lumpur', country: 'Malaysia' },
-            { code: 'DXB', name: 'Dubai International Airport', city: 'Dubai', country: 'United Arab Emirates' },
-            { code: 'DOH', name: 'Hamad International Airport', city: 'Doha', country: 'Qatar' },
-            { code: 'IST', name: 'Istanbul Airport', city: 'Istanbul', country: 'Turkey' },
-            { code: 'LHR', name: 'Heathrow Airport', city: 'London', country: 'United Kingdom' },
-            { code: 'LGW', name: 'Gatwick Airport', city: 'London', country: 'United Kingdom' },
-            { code: 'CDG', name: 'Charles de Gaulle Airport', city: 'Paris', country: 'France' },
-            { code: 'ORY', name: 'Orly Airport', city: 'Paris', country: 'France' },
-            { code: 'AMS', name: 'Amsterdam Airport Schiphol', city: 'Amsterdam', country: 'Netherlands' },
-            { code: 'FRA', name: 'Frankfurt Airport', city: 'Frankfurt', country: 'Germany' },
-            { code: 'MUC', name: 'Munich Airport', city: 'Munich', country: 'Germany' },
-            { code: 'ZRH', name: 'Zurich Airport', city: 'Zurich', country: 'Switzerland' },
-            { code: 'VIE', name: 'Vienna International Airport', city: 'Vienna', country: 'Austria' },
-            { code: 'BCN', name: 'Barcelona–El Prat Airport', city: 'Barcelona', country: 'Spain' },
-            { code: 'MAD', name: 'Adolfo Suárez Madrid–Barajas Airport', city: 'Madrid', country: 'Spain' },
-            { code: 'FCO', name: 'Leonardo da Vinci–Fiumicino Airport', city: 'Rome', country: 'Italy' },
-            { code: 'MXP', name: 'Malpensa Airport', city: 'Milan', country: 'Italy' },
-            { code: 'ARN', name: 'Stockholm Arlanda Airport', city: 'Stockholm', country: 'Sweden' },
-            { code: 'OSL', name: 'Oslo Gardermoen Airport', city: 'Oslo', country: 'Norway' },
-            { code: 'CPH', name: 'Copenhagen Airport', city: 'Copenhagen', country: 'Denmark' },
-            { code: 'HEL', name: 'Helsinki Airport', city: 'Helsinki', country: 'Finland' },
-            { code: 'DUB', name: 'Dublin Airport', city: 'Dublin', country: 'Ireland' },
-            { code: 'JFK', name: 'John F. Kennedy International Airport', city: 'New York', country: 'USA' },
-            { code: 'EWR', name: 'Newark Liberty International Airport', city: 'Newark', country: 'USA' },
-            { code: 'LGA', name: 'LaGuardia Airport', city: 'New York', country: 'USA' },
-            { code: 'BOS', name: 'Logan International Airport', city: 'Boston', country: 'USA' },
-            { code: 'ORD', name: 'O\'Hare International Airport', city: 'Chicago', country: 'USA' },
-            { code: 'ATL', name: 'Hartsfield–Jackson Atlanta International Airport', city: 'Atlanta', country: 'USA' },
-            { code: 'DFW', name: 'Dallas/Fort Worth International Airport', city: 'Dallas', country: 'USA' },
-            { code: 'LAX', name: 'Los Angeles International Airport', city: 'Los Angeles', country: 'USA' },
-            { code: 'SFO', name: 'San Francisco International Airport', city: 'San Francisco', country: 'USA' },
-            { code: 'SEA', name: 'Seattle–Tacoma International Airport', city: 'Seattle', country: 'USA' },
-            { code: 'MIA', name: 'Miami International Airport', city: 'Miami', country: 'USA' },
-            { code: 'YYZ', name: 'Toronto Pearson International Airport', city: 'Toronto', country: 'Canada' },
-            { code: 'YVR', name: 'Vancouver International Airport', city: 'Vancouver', country: 'Canada' },
-            { code: 'GRU', name: 'São Paulo–Guarulhos International Airport', city: 'São Paulo', country: 'Brazil' },
-            { code: 'EZE', name: 'Ministro Pistarini International Airport', city: 'Buenos Aires', country: 'Argentina' },
-            { code: 'JNB', name: 'O. R. Tambo International Airport', city: 'Johannesburg', country: 'South Africa' },
-            { code: 'CPT', name: 'Cape Town International Airport', city: 'Cape Town', country: 'South Africa' },
-            { code: 'SYD', name: 'Sydney Kingsford Smith Airport', city: 'Sydney', country: 'Australia' },
-            { code: 'MEL', name: 'Melbourne Airport', city: 'Melbourne', country: 'Australia' },
-            { code: 'BNE', name: 'Brisbane Airport', city: 'Brisbane', country: 'Australia' },
-            { code: 'AKL', name: 'Auckland Airport', city: 'Auckland', country: 'New Zealand' },
-            { code: 'DEL', name: 'Indira Gandhi International Airport', city: 'Delhi', country: 'India' },
-            { code: 'BOM', name: 'Chhatrapati Shivaji Maharaj International Airport', city: 'Mumbai', country: 'India' },
-            { code: 'BLR', name: 'Kempegowda International Airport', city: 'Bengaluru', country: 'India' },
-            { code: 'MAA', name: 'Chennai International Airport', city: 'Chennai', country: 'India' },
-            { code: 'SHJ', name: 'Sharjah International Airport', city: 'Sharjah', country: 'United Arab Emirates' },
-            { code: 'PEK', name: 'Beijing Capital International Airport', city: 'Beijing', country: 'China' },
-            { code: 'PVG', name: 'Shanghai Pudong International Airport', city: 'Shanghai', country: 'China' },
-            { code: 'CAN', name: 'Guangzhou Baiyun International Airport', city: 'Guangzhou', country: 'China' },
-            { code: 'SZX', name: 'Shenzhen Bao\'an International Airport', city: 'Shenzhen', country: 'China' },
-            { code: 'KIX', name: 'Kansai International Airport', city: 'Osaka', country: 'Japan' },
-            { code: 'NGO', name: 'Chubu Centrair International Airport', city: 'Nagoya', country: 'Japan' },
-            { code: 'FUK', name: 'Fukuoka Airport', city: 'Fukuoka', country: 'Japan' },
-            { code: 'CTS', name: 'New Chitose Airport', city: 'Sapporo', country: 'Japan' },
-            { code: 'ITM', name: 'Osaka International Airport', city: 'Osaka', country: 'Japan' },
-            { code: 'NKG', name: 'Nanjing Lukou International Airport', city: 'Nanjing', country: 'China' },
-            { code: 'TSA', name: 'Taipei Songshan Airport', city: 'Taipei', country: 'Taiwan' },
-            { code: 'KHH', name: 'Kaohsiung International Airport', city: 'Kaohsiung', country: 'Taiwan' },
-            { code: 'CGK', name: 'Soekarno-Hatta International Airport', city: 'Jakarta', country: 'Indonesia' },
-            { code: 'DPS', name: 'Ngurah Rai International Airport', city: 'Denpasar', country: 'Indonesia' },
-            { code: 'MNL', name: 'Ninoy Aquino International Airport', city: 'Manila', country: 'Philippines' },
-            { code: 'CEB', name: 'Mactan–Cebu International Airport', city: 'Cebu', country: 'Philippines' },
-            { code: 'SGN', name: 'Tan Son Nhat International Airport', city: 'Ho Chi Minh City', country: 'Vietnam' },
-            { code: 'HAN', name: 'Noi Bai International Airport', city: 'Hanoi', country: 'Vietnam' },
-            { code: 'DAD', name: 'Da Nang International Airport', city: 'Da Nang', country: 'Vietnam' },
-            { code: 'KTM', name: 'Tribhuvan International Airport', city: 'Kathmandu', country: 'Nepal' },
-            { code: 'CCU', name: 'Netaji Subhas Chandra Bose International Airport', city: 'Kolkata', country: 'India' },
-            { code: 'HYD', name: 'Rajiv Gandhi International Airport', city: 'Hyderabad', country: 'India' },
-            { code: 'AMD', name: 'Sardar Vallabhbhai Patel International Airport', city: 'Ahmedabad', country: 'India' },
-            { code: 'RUH', name: 'King Khalid International Airport', city: 'Riyadh', country: 'Saudi Arabia' },
-            { code: 'JED', name: 'King Abdulaziz International Airport', city: 'Jeddah', country: 'Saudi Arabia' },
-            { code: 'AUH', name: 'Abu Dhabi International Airport', city: 'Abu Dhabi', country: 'United Arab Emirates' },
-            { code: 'BAH', name: 'Bahrain International Airport', city: 'Manama', country: 'Bahrain' },
-            { code: 'KWI', name: 'Kuwait International Airport', city: 'Kuwait City', country: 'Kuwait' },
-            { code: 'TBS', name: 'Tbilisi International Airport', city: 'Tbilisi', country: 'Georgia' },
-            { code: 'SVO', name: 'Sheremetyevo International Airport', city: 'Moscow', country: 'Russia' },
-            { code: 'DME', name: 'Domodedovo International Airport', city: 'Moscow', country: 'Russia' },
-            { code: 'LED', name: 'Pulkovo Airport', city: 'Saint Petersburg', country: 'Russia' },
-            { code: 'KZN', name: 'Kazan International Airport', city: 'Kazan', country: 'Russia' },
-            { code: 'BOG', name: 'El Dorado International Airport', city: 'Bogotá', country: 'Colombia' },
-            { code: 'MEX', name: 'Mexico City International Airport', city: 'Mexico City', country: 'Mexico' },
-            { code: 'LIM', name: 'Jorge Chávez International Airport', city: 'Lima', country: 'Peru' },
-            { code: 'SCL', name: 'Comodoro Arturo Merino Benítez International Airport', city: 'Santiago', country: 'Chile' },
-            { code: 'GIG', name: 'Rio de Janeiro–Galeão International Airport', city: 'Rio de Janeiro', country: 'Brazil' },
-            { code: 'SJO', name: 'Juan Santamaría International Airport', city: 'San José', country: 'Costa Rica' },
-            { code: 'PTY', name: 'Tocumen International Airport', city: 'Panama City', country: 'Panama' },
-            { code: 'SAL', name: 'Monseñor Óscar Arnulfo Romero International Airport', city: 'San Salvador', country: 'El Salvador' },
-            { code: 'CCS', name: 'Simón Bolívar International Airport', city: 'Caracas', country: 'Venezuela' },
-            { code: 'HAV', name: 'José Martí International Airport', city: 'Havana', country: 'Cuba' },
-            { code: 'IAD', name: 'Washington Dulles International Airport', city: 'Washington, D.C.', country: 'USA' },
-            { code: 'DCA', name: 'Ronald Reagan Washington National Airport', city: 'Washington, D.C.', country: 'USA' },
-            { code: 'MDW', name: 'Midway International Airport', city: 'Chicago', country: 'USA' },
-            { code: 'IAH', name: 'George Bush Intercontinental Airport', city: 'Houston', country: 'USA' },
-            { code: 'DEN', name: 'Denver International Airport', city: 'Denver', country: 'USA' },
-            { code: 'PHX', name: 'Phoenix Sky Harbor International Airport', city: 'Phoenix', country: 'USA' },
-            { code: 'LAS', name: 'Harry Reid International Airport', city: 'Las Vegas', country: 'USA' },
-            { code: 'SAN', name: 'San Diego International Airport', city: 'San Diego', country: 'USA' },
-            { code: 'PHL', name: 'Philadelphia International Airport', city: 'Philadelphia', country: 'USA' },
-            { code: 'MSP', name: 'Minneapolis–Saint Paul International Airport', city: 'Minneapolis', country: 'USA' },
-            { code: 'DTW', name: 'Detroit Metropolitan Airport', city: 'Detroit', country: 'USA' },
-            { code: 'BWI', name: 'Baltimore/Washington International Thurgood Marshall Airport', city: 'Baltimore', country: 'USA' },
-            { code: 'FLL', name: 'Fort Lauderdale–Hollywood International Airport', city: 'Fort Lauderdale', country: 'USA' },
-            { code: 'TPA', name: 'Tampa International Airport', city: 'Tampa', country: 'USA' },
-            { code: 'YUL', name: 'Montréal–Trudeau International Airport', city: 'Montreal', country: 'Canada' },
-            { code: 'YYC', name: 'Calgary International Airport', city: 'Calgary', country: 'Canada' },
-            { code: 'YOW', name: 'Ottawa Macdonald–Cartier International Airport', city: 'Ottawa', country: 'Canada' },
-            { code: 'YWG', name: 'Winnipeg James Armstrong Richardson International Airport', city: 'Winnipeg', country: 'Canada' },
-            { code: 'PER', name: 'Perth Airport', city: 'Perth', country: 'Australia' },
-            { code: 'ADL', name: 'Adelaide Airport', city: 'Adelaide', country: 'Australia' },
-            { code: 'CNS', name: 'Cairns Airport', city: 'Cairns', country: 'Australia' },
-            { code: 'CHC', name: 'Christchurch Airport', city: 'Christchurch', country: 'New Zealand' },
-            { code: 'WLG', name: 'Wellington Airport', city: 'Wellington', country: 'New Zealand' },
-            { code: 'NAN', name: 'Nadi International Airport', city: 'Nadi', country: 'Fiji' },
-            { code: 'CAI', name: 'Cairo International Airport', city: 'Cairo', country: 'Egypt' },
-            { code: 'NBO', name: 'Jomo Kenyatta International Airport', city: 'Nairobi', country: 'Kenya' },
-            { code: 'ADD', name: 'Addis Ababa Bole International Airport', city: 'Addis Ababa', country: 'Ethiopia' },
-            { code: 'LOS', name: 'Murtala Muhammed International Airport', city: 'Lagos', country: 'Nigeria' },
-            { code: 'ACC', name: 'Kotoka International Airport', city: 'Accra', country: 'Ghana' },
-            { code: 'DAR', name: 'Julius Nyerere International Airport', city: 'Dar es Salaam', country: 'Tanzania' },
-            { code: 'CMN', name: 'Mohammed V International Airport', city: 'Casablanca', country: 'Morocco' },
-            { code: 'TUN', name: 'Tunis–Carthage International Airport', city: 'Tunis', country: 'Tunisia' },
-            { code: 'DUR', name: 'King Shaka International Airport', city: 'Durban', country: 'South Africa' },
-            { code: 'MSA', name: 'Muscat International Airport', city: 'Muscat', country: 'Oman' },
-            { code: 'BEG', name: 'Belgrade Nikola Tesla Airport', city: 'Belgrade', country: 'Serbia' },
-            { code: 'ZAG', name: 'Zagreb Airport', city: 'Zagreb', country: 'Croatia' },
-            { code: 'WAW', name: 'Warsaw Chopin Airport', city: 'Warsaw', country: 'Poland' },
-            { code: 'ATH', name: 'Eleftherios Venizelos Airport', city: 'Athens', country: 'Greece' },
-            { code: 'OTP', name: 'Henri Coandă International Airport', city: 'Bucharest', country: 'Romania' },
-            { code: 'SKG', name: 'Thessaloniki Airport', city: 'Thessaloniki', country: 'Greece' }
+            { code: 'ICN', name: 'Incheon International Airport', koName: '인천국제공항', city: 'Seoul', koCity: '서울', country: 'South Korea' },
+            { code: 'GMP', name: 'Gimpo International Airport', koName: '김포국제공항', city: 'Seoul', koCity: '서울', country: 'South Korea' },
+            { code: 'PUS', name: 'Gimhae International Airport', koName: '김해국제공항', city: 'Busan', koCity: '부산', country: 'South Korea' },
+            { code: 'CJU', name: 'Jeju International Airport', koName: '제주국제공항', city: 'Jeju', koCity: '제주', country: 'South Korea' },
+            { code: 'NRT', name: 'Narita International Airport', koName: '나리타국제공항', city: 'Tokyo', koCity: '도쿄', country: 'Japan' },
+            { code: 'HND', name: 'Tokyo Haneda Airport', koName: '하네다공항', city: 'Tokyo', koCity: '도쿄', country: 'Japan' },
+            { code: 'HKG', name: 'Hong Kong International Airport', koName: '홍콩국제공항', city: 'Hong Kong', koCity: '홍콩', country: 'China' },
+            { code: 'TPE', name: 'Taiwan Taoyuan International Airport', koName: '타이완 타오위안 국제공항', city: 'Taipei', koCity: '타이베이', country: 'Taiwan' },
+            { code: 'SIN', name: 'Singapore Changi Airport', koName: '싱가포르 창이공항', city: 'Singapore', koCity: '싱가포르', country: 'Singapore' },
+            { code: 'BKK', name: 'Suvarnabhumi Airport', koName: '수완나품공항', city: 'Bangkok', koCity: '방콕', country: 'Thailand' },
+            { code: 'KUL', name: 'Kuala Lumpur International Airport', koName: '쿠알라룸푸르 국제공항', city: 'Kuala Lumpur', koCity: '쿠알라룸푸르', country: 'Malaysia' },
+            { code: 'DXB', name: 'Dubai International Airport', koName: '두바이 국제공항', city: 'Dubai', koCity: '두바이', country: 'United Arab Emirates' },
+            { code: 'DOH', name: 'Hamad International Airport', koName: '하마드 국제공항', city: 'Doha', koCity: '도하', country: 'Qatar' },
+            { code: 'IST', name: 'Istanbul Airport', koName: '이스탄불공항', city: 'Istanbul', koCity: '이스탄불', country: 'Turkey' },
+            { code: 'LHR', name: 'Heathrow Airport', koName: '히드로공항', city: 'London', koCity: '런던', country: 'United Kingdom' },
+            { code: 'LGW', name: 'Gatwick Airport', koName: '게트윅공항', city: 'London', koCity: '런던', country: 'United Kingdom' },
+            { code: 'CDG', name: 'Charles de Gaulle Airport', koName: '샤를드골공항', city: 'Paris', koCity: '파리', country: 'France' },
+            { code: 'ORY', name: 'Orly Airport', koName: '오를리공항', city: 'Paris', koCity: '파리', country: 'France' },
+            { code: 'AMS', name: 'Amsterdam Airport Schiphol', koName: '스키폴공항', city: 'Amsterdam', koCity: '암스테르담', country: 'Netherlands' },
+            { code: 'FRA', name: 'Frankfurt Airport', koName: '프랑크푸르트공항', city: 'Frankfurt', koCity: '프랑크푸르트', country: 'Germany' },
+            { code: 'MUC', name: 'Munich Airport', koName: '뮌헨공항', city: 'Munich', koCity: '뮌헨', country: 'Germany' },
+            { code: 'ZRH', name: 'Zurich Airport', koName: '취리히공항', city: 'Zurich', koCity: '취리히', country: 'Switzerland' },
+            { code: 'VIE', name: 'Vienna International Airport', koName: '비엔나 국제공항', city: 'Vienna', koCity: '빈', country: 'Austria' },
+            { code: 'BCN', name: 'Barcelona–El Prat Airport', koName: '엘프라트공항', city: 'Barcelona', koCity: '바르셀로나', country: 'Spain' },
+            { code: 'MAD', name: 'Adolfo Suárez Madrid–Barajas Airport', koName: '마드리드 바라하스공항', city: 'Madrid', koCity: '마드리드', country: 'Spain' },
+            { code: 'FCO', name: 'Leonardo da Vinci–Fiumicino Airport', koName: '피우미치노공항', city: 'Rome', koCity: '로마', country: 'Italy' },
+            { code: 'MXP', name: 'Malpensa Airport', koName: '말펜사공항', city: 'Milan', koCity: '밀라노', country: 'Italy' },
+            { code: 'ARN', name: 'Stockholm Arlanda Airport', koName: '알란다공항', city: 'Stockholm', koCity: '스톡홀름', country: 'Sweden' },
+            { code: 'OSL', name: 'Oslo Gardermoen Airport', koName: '오슬로공항', city: 'Oslo', koCity: '오슬로', country: 'Norway' },
+            { code: 'CPH', name: 'Copenhagen Airport', koName: '코펜하겐공항', city: 'Copenhagen', koCity: '코펜하겐', country: 'Denmark' },
+            { code: 'HEL', name: 'Helsinki Airport', koName: '헬싱키공항', city: 'Helsinki', koCity: '헬싱키', country: 'Finland' },
+            { code: 'DUB', name: 'Dublin Airport', koName: '더블린공항', city: 'Dublin', koCity: '더블린', country: 'Ireland' },
+            { code: 'JFK', name: 'John F. Kennedy International Airport', koName: '존 F. 케네디 국제공항', city: 'New York', koCity: '뉴욕', country: 'USA' },
+            { code: 'EWR', name: 'Newark Liberty International Airport', koName: '뉴어크공항', city: 'Newark', koCity: '뉴어크', country: 'USA' },
+            { code: 'LGA', name: 'LaGuardia Airport', koName: '라과디아공항', city: 'New York', koCity: '뉴욕', country: 'USA' },
+            { code: 'BOS', name: 'Logan International Airport', koName: '로건공항', city: 'Boston', koCity: '보스턴', country: 'USA' },
+            { code: 'ORD', name: 'O\'Hare International Airport', koName: '오헤어 국제공항', city: 'Chicago', koCity: '시카고', country: 'USA' },
+            { code: 'ATL', name: 'Hartsfield–Jackson Atlanta International Airport', koName: '하츠필드잭슨 애틀란타 국제공항', city: 'Atlanta', koCity: '애틀란타', country: 'USA' },
+            { code: 'DFW', name: 'Dallas/Fort Worth International Airport', koName: '달라스 포트워스 국제공항', city: 'Dallas', koCity: '댈러스', country: 'USA' },
+            { code: 'LAX', name: 'Los Angeles International Airport', koName: '로스앤젤레스 국제공항', city: 'Los Angeles', koCity: '로스앤젤레스', country: 'USA' },
+            { code: 'SFO', name: 'San Francisco International Airport', koName: '샌프란시스코 국제공항', city: 'San Francisco', koCity: '샌프란시스코', country: 'USA' },
+            { code: 'SEA', name: 'Seattle–Tacoma International Airport', koName: '시애틀 타코마 국제공항', city: 'Seattle', koCity: '시애틀', country: 'USA' },
+            { code: 'MIA', name: 'Miami International Airport', koName: '마이애미 국제공항', city: 'Miami', koCity: '마이애미', country: 'USA' },
+            { code: 'YYZ', name: 'Toronto Pearson International Airport', koName: '토론토 피어슨 국제공항', city: 'Toronto', koCity: '토론토', country: 'Canada' },
+            { code: 'YVR', name: 'Vancouver International Airport', koName: '밴쿠버 국제공항', city: 'Vancouver', koCity: '밴쿠버', country: 'Canada' },
+            { code: 'GRU', name: 'São Paulo–Guarulhos International Airport', koName: '상파울루 구아룰료스 국제공항', city: 'São Paulo', koCity: '상파울로', country: 'Brazil' },
+            { code: 'EZE', name: 'Ministro Pistarini International Airport', koName: '부에노스아이레스 미니스트로 피스타리니 국제공항', city: 'Buenos Aires', koCity: '부에노스아이레스', country: 'Argentina' },
+            { code: 'JNB', name: 'O. R. Tambo International Airport', koName: '요한네스버그 탐보 국제공항', city: 'Johannesburg', koCity: '요하네스버그', country: 'South Africa' },
+            { code: 'CPT', name: 'Cape Town International Airport', koName: '케이프타운 국제공항', city: 'Cape Town', koCity: '케이프타운', country: 'South Africa' },
+            { code: 'SYD', name: 'Sydney Kingsford Smith Airport', koName: '시드니공항', city: 'Sydney', koCity: '시드니', country: 'Australia' },
+            { code: 'MEL', name: 'Melbourne Airport', koName: '멜버른공항', city: 'Melbourne', koCity: '멜버른', country: 'Australia' },
+            { code: 'BNE', name: 'Brisbane Airport', koName: '브리즈번공항', city: 'Brisbane', koCity: '브리즈번', country: 'Australia' },
+            { code: 'AKL', name: 'Auckland Airport', koName: '오클랜드공항', city: 'Auckland', koCity: '오클랜드', country: 'New Zealand' },
+            { code: 'DEL', name: 'Indira Gandhi International Airport', koName: '인디라 간디 국제공항', city: 'Delhi', koCity: '델리', country: 'India' },
+            { code: 'BOM', name: 'Chhatrapati Shivaji Maharaj International Airport', koName: '뭄바이 국제공항', city: 'Mumbai', koCity: '뭄바이', country: 'India' },
+            { code: 'BLR', name: 'Kempegowda International Airport', koName: '벵갈루루 국제공항', city: 'Bengaluru', koCity: '벵갈루루', country: 'India' },
+            { code: 'MAA', name: 'Chennai International Airport', koName: '첸나이 국제공항', city: 'Chennai', koCity: '첸나이', country: 'India' },
+            { code: 'SHJ', name: 'Sharjah International Airport', koName: '샤르자 국제공항', city: 'Sharjah', koCity: '샤르자', country: 'United Arab Emirates' },
+            { code: 'PEK', name: 'Beijing Capital International Airport', koName: '베이징 서우두 국제공항', city: 'Beijing', koCity: '베이징', country: 'China' },
+            { code: 'PVG', name: 'Shanghai Pudong International Airport', koName: '상하이 푸둥 국제공항', city: 'Shanghai', koCity: '상하이', country: 'China' },
+            { code: 'CAN', name: 'Guangzhou Baiyun International Airport', koName: '광저우 바이윤 국제공항', city: 'Guangzhou', koCity: '광저우', country: 'China' },
+            { code: 'SZX', name: 'Shenzhen Bao\'an International Airport', koName: '선전 바오안 국제공항', city: 'Shenzhen', koCity: '선전', country: 'China' },
+            { code: 'KIX', name: 'Kansai International Airport', koName: '간사이 국제공항', city: 'Osaka', koCity: '오사카', country: 'Japan' },
+            { code: 'NGO', name: 'Chubu Centrair International Airport', koName: '나고야 주부 센트레어 국제공항', city: 'Nagoya', koCity: '나고야', country: 'Japan' },
+            { code: 'FUK', name: 'Fukuoka Airport', koName: '후쿠오카공항', city: 'Fukuoka', koCity: '후쿠오카', country: 'Japan' },
+            { code: 'CTS', name: 'New Chitose Airport', koName: '신치토세공항', city: 'Sapporo', koCity: '삿포로', country: 'Japan' },
+            { code: 'ITM', name: 'Osaka International Airport', koName: '오사카 국제공항', city: 'Osaka', koCity: '오사카', country: 'Japan' },
+            { code: 'NKG', name: 'Nanjing Lukou International Airport', koName: '난징 루커우 국제공항', city: 'Nanjing', koCity: '난징', country: 'China' },
+            { code: 'TSA', name: 'Taipei Songshan Airport', koName: '타이베이 송산공항', city: 'Taipei', koCity: '타이베이', country: 'Taiwan' },
+            { code: 'KHH', name: 'Kaohsiung International Airport', koName: '가오슝 국제공항', city: 'Kaohsiung', koCity: '가오슝', country: 'Taiwan' },
+            { code: 'CGK', name: 'Soekarno-Hatta International Airport', koName: '자카르타 수카르노하타 국제공항', city: 'Jakarta', koCity: '자카르타', country: 'Indonesia' },
+            { code: 'DPS', name: 'Ngurah Rai International Airport', koName: '응우라라이공항 (발리)', city: 'Denpasar', koCity: '덴파사르', country: 'Indonesia' },
+            { code: 'MNL', name: 'Ninoy Aquino International Airport', koName: '니노이 아키노 국제공항', city: 'Manila', koCity: '마닐라', country: 'Philippines' },
+            { code: 'CEB', name: 'Mactan–Cebu International Airport', koName: '막탄 세부 국제공항', city: 'Cebu', koCity: '세부', country: 'Philippines' },
+            { code: 'SGN', name: 'Tan Son Nhat International Airport', koName: '탄손냣 국제공항', city: 'Ho Chi Minh City', koCity: '호치민', country: 'Vietnam' },
+            { code: 'HAN', name: 'Noi Bai International Airport', koName: '노이바이 국제공항', city: 'Hanoi', koCity: '하노이', country: 'Vietnam' },
+            { code: 'DAD', name: 'Da Nang International Airport', koName: '다낭 국제공항', city: 'Da Nang', koCity: '다낭', country: 'Vietnam' },
+            { code: 'KTM', name: 'Tribhuvan International Airport', koName: '트리부반 국제공항', city: 'Kathmandu', koCity: '카트만두', country: 'Nepal' },
+            { code: 'CCU', name: 'Netaji Subhas Chandra Bose International Airport', koName: '콜카타 국제공항', city: 'Kolkata', koCity: '콜카타', country: 'India' },
+            { code: 'HYD', name: 'Rajiv Gandhi International Airport', koName: '하이데라바드 국제공항', city: 'Hyderabad', koCity: '하이데라바드', country: 'India' },
+            { code: 'AMD', name: 'Sardar Vallabhbhai Patel International Airport', koName: '아메다바드 국제공항', city: 'Ahmedabad', koCity: '아메다바드', country: 'India' },
+            { code: 'RUH', name: 'King Khalid International Airport', koName: '리야드 킹 칼리드 국제공항', city: 'Riyadh', koCity: '리야드', country: 'Saudi Arabia' },
+            { code: 'JED', name: 'King Abdulaziz International Airport', koName: '제다 킹 압둘아지즈 국제공항', city: 'Jeddah', koCity: '제다', country: 'Saudi Arabia' },
+            { code: 'AUH', name: 'Abu Dhabi International Airport', koName: '아부다비 국제공항', city: 'Abu Dhabi', koCity: '아부다비', country: 'United Arab Emirates' },
+            { code: 'BAH', name: 'Bahrain International Airport', koName: '바레인 국제공항', city: 'Manama', koCity: '마나마', country: 'Bahrain' },
+            { code: 'KWI', name: 'Kuwait International Airport', koName: '쿠웨이트 국제공항', city: 'Kuwait City', koCity: '쿠웨이트시티', country: 'Kuwait' },
+            { code: 'TBS', name: 'Tbilisi International Airport', koName: '트빌리시 국제공항', city: 'Tbilisi', koCity: '트빌리시', country: 'Georgia' },
+            { code: 'SVO', name: 'Sheremetyevo International Airport', koName: '셰레메티예보 국제공항', city: 'Moscow', koCity: '모스크바', country: 'Russia' },
+            { code: 'DME', name: 'Domodedovo International Airport', koName: '도모데도보 국제공항', city: 'Moscow', koCity: '모스크바', country: 'Russia' },
+            { code: 'LED', name: 'Pulkovo Airport', koName: '풀코보공항', city: 'Saint Petersburg', koCity: '상트페테르부르크', country: 'Russia' },
+            { code: 'KZN', name: 'Kazan International Airport', koName: '카잔 국제공항', city: 'Kazan', koCity: '카잔', country: 'Russia' },
+            { code: 'BOG', name: 'El Dorado International Airport', koName: '엘도라도 국제공항', city: 'Bogotá', koCity: '보고타', country: 'Colombia' },
+            { code: 'MEX', name: 'Mexico City International Airport', koName: '멕시코시티 국제공항', city: 'Mexico City', koCity: '멕시코시티', country: 'Mexico' },
+            { code: 'LIM', name: 'Jorge Chávez International Airport', koName: '호르헤 차베스 국제공항', city: 'Lima', koCity: '리마', country: 'Peru' },
+            { code: 'SCL', name: 'Comodoro Arturo Merino Benítez International Airport', koName: '산티아고 국제공항', city: 'Santiago', koCity: '산티아고', country: 'Chile' },
+            { code: 'GIG', name: 'Rio de Janeiro–Galeão International Airport', koName: '리우데자네이루 국제공항', city: 'Rio de Janeiro', koCity: '리우데자네이루', country: 'Brazil' },
+            { code: 'SJO', name: 'Juan Santamaría International Airport', koName: '산 호세 국제공항', city: 'San José', koCity: '산 호세', country: 'Costa Rica' },
+            { code: 'PTY', name: 'Tocumen International Airport', koName: '토쿠멘 국제공항', city: 'Panama City', koCity: '파나마시티', country: 'Panama' },
+            { code: 'SAL', name: 'Monseñor Óscar Arnulfo Romero International Airport', koName: '산살바도르 국제공항', city: 'San Salvador', koCity: '산살바도르', country: 'El Salvador' },
+            { code: 'CCS', name: 'Simón Bolívar International Airport', koName: '시몬 볼리바르 국제공항', city: 'Caracas', koCity: '카라카스', country: 'Venezuela' },
+            { code: 'HAV', name: 'José Martí International Airport', koName: '호세 마르티 국제공항', city: 'Havana', koCity: '아바나', country: 'Cuba' },
+            { code: 'IAD', name: 'Washington Dulles International Airport', koName: '워싱턴 덜레스 국제공항', city: 'Washington, D.C.', koCity: '워싱턴 D.C.', country: 'USA' },
+            { code: 'DCA', name: 'Ronald Reagan Washington National Airport', koName: '워싱턴 내셔널 공항', city: 'Washington, D.C.', koCity: '워싱턴 D.C.', country: 'USA' },
+            { code: 'MDW', name: 'Midway International Airport', koName: '미드웨이 국제공항', city: 'Chicago', koCity: '시카고', country: 'USA' },
+            { code: 'IAH', name: 'George Bush Intercontinental Airport', koName: '휴스턴 조지 부시 국제공항', city: 'Houston', koCity: '휴스턴', country: 'USA' },
+            { code: 'DEN', name: 'Denver International Airport', koName: '덴버 국제공항', city: 'Denver', koCity: '덴버', country: 'USA' },
+            { code: 'PHX', name: 'Phoenix Sky Harbor International Airport', koName: '피닉스 스카이 하버 국제공항', city: 'Phoenix', koCity: '피닉스', country: 'USA' },
+            { code: 'LAS', name: 'Harry Reid International Airport', koName: '라스베이거스 국제공항', city: 'Las Vegas', koCity: '라스베이거스', country: 'USA' },
+            { code: 'SAN', name: 'San Diego International Airport', koName: '샌디에이고 국제공항', city: 'San Diego', koCity: '샌디에이고', country: 'USA' },
+            { code: 'PHL', name: 'Philadelphia International Airport', koName: '필라델피아 국제공항', city: 'Philadelphia', koCity: '필라델피아', country: 'USA' },
+            { code: 'MSP', name: 'Minneapolis–Saint Paul International Airport', koName: '미니애폴리스 국제공항', city: 'Minneapolis', koCity: '미니애폴리스', country: 'USA' },
+            { code: 'DTW', name: 'Detroit Metropolitan Airport', koName: '디트로이트 메트로폴리탄공항', city: 'Detroit', koCity: '디트로이트', country: 'USA' },
+            { code: 'BWI', name: 'Baltimore/Washington International Thurgood Marshall Airport', koName: '볼티모어 워싱턴 국제공항', city: 'Baltimore', koCity: '볼티모어', country: 'USA' },
+            { code: 'FLL', name: 'Fort Lauderdale–Hollywood International Airport', koName: '포트로더데일 국제공항', city: 'Fort Lauderdale', koCity: '포트로더데일', country: 'USA' },
+            { code: 'TPA', name: 'Tampa International Airport', koName: '탐파 국제공항', city: 'Tampa', koCity: '탐파', country: 'USA' },
+            { code: 'YUL', name: 'Montréal–Trudeau International Airport', koName: '몬트리올 트뤼도 국제공항', city: 'Montreal', koCity: '몬트리올', country: 'Canada' },
+            { code: 'YYC', name: 'Calgary International Airport', koName: '캘거리 국제공항', city: 'Calgary', koCity: '캘거리', country: 'Canada' },
+            { code: 'YOW', name: 'Ottawa Macdonald–Cartier International Airport', koName: '오타와 국제공항', city: 'Ottawa', koCity: '오타와', country: 'Canada' },
+            { code: 'YWG', name: 'Winnipeg James Armstrong Richardson International Airport', koName: '위니펙 국제공항', city: 'Winnipeg', koCity: '위니펙', country: 'Canada' },
+            { code: 'PER', name: 'Perth Airport', koName: '퍼스공항', city: 'Perth', koCity: '퍼스', country: 'Australia' },
+            { code: 'ADL', name: 'Adelaide Airport', koName: '애들레이드공항', city: 'Adelaide', koCity: '애들레이드', country: 'Australia' },
+            { code: 'CNS', name: 'Cairns Airport', koName: '케언즈공항', city: 'Cairns', koCity: '케언즈', country: 'Australia' },
+            { code: 'CHC', name: 'Christchurch Airport', koName: '크라이스트처치공항', city: 'Christchurch', koCity: '크라이스트처치', country: 'New Zealand' },
+            { code: 'WLG', name: 'Wellington Airport', koName: '웰링턴공항', city: 'Wellington', koCity: '웰링턴', country: 'New Zealand' },
+            { code: 'NAN', name: 'Nadi International Airport', koName: '나디 국제공항', city: 'Nadi', koCity: '나디', country: 'Fiji' },
+            { code: 'CAI', name: 'Cairo International Airport', koName: '카이로 국제공항', city: 'Cairo', koCity: '카이로', country: 'Egypt' },
+            { code: 'NBO', name: 'Jomo Kenyatta International Airport', koName: '요모 케냐타 국제공항', city: 'Nairobi', koCity: '나이로비', country: 'Kenya' },
+            { code: 'ADD', name: 'Addis Ababa Bole International Airport', koName: '아디스아바바 볼레 국제공항', city: 'Addis Ababa', koCity: '아디스아바바', country: 'Ethiopia' },
+            { code: 'LOS', name: 'Murtala Muhammed International Airport', koName: '무르탈라 무함마드 국제공항', city: 'Lagos', koCity: '라고스', country: 'Nigeria' },
+            { code: 'ACC', name: 'Kotoka International Airport', koName: '코토카 국제공항', city: 'Accra', koCity: '아크라', country: 'Ghana' },
+            { code: 'DAR', name: 'Julius Nyerere International Airport', koName: '줄리어스 니에레레 국제공항', city: 'Dar es Salaam', koCity: '다르에살람', country: 'Tanzania' },
+            { code: 'CMN', name: 'Mohammed V International Airport', koName: '무함마드 5세 국제공항', city: 'Casablanca', koCity: '카사블랑카', country: 'Morocco' },
+            { code: 'TUN', name: 'Tunis–Carthage International Airport', koName: '튀니스 카르타고 국제공항', city: 'Tunis', koCity: '튀니스', country: 'Tunisia' },
+            { code: 'DUR', name: 'King Shaka International Airport', koName: '킹 샤카 국제공항', city: 'Durban', koCity: '더반', country: 'South Africa' },
+            { code: 'MSA', name: 'Muscat International Airport', koName: '무스카트 국제공항', city: 'Muscat', koCity: '무스카트', country: 'Oman' },
+            { code: 'BEG', name: 'Belgrade Nikola Tesla Airport', koName: '베오그라드 니콜라 테슬라공항', city: 'Belgrade', koCity: '베오그라드', country: 'Serbia' },
+            { code: 'ZAG', name: 'Zagreb Airport', koName: '자그레브공항', city: 'Zagreb', koCity: '자그레브', country: 'Croatia' },
+            { code: 'WAW', name: 'Warsaw Chopin Airport', koName: '바르샤바 쇼팽공항', city: 'Warsaw', koCity: '바르샤바', country: 'Poland' },
+            { code: 'ATH', name: 'Eleftherios Venizelos Airport', koName: '아테네 국제공항', city: 'Athens', koCity: '아테네', country: 'Greece' },
+            { code: 'OTP', name: 'Henri Coandă International Airport', koName: '부카레스트 앙리 코안다 국제공항', city: 'Bucharest', koCity: '부카레스트', country: 'Romania' },
+            { code: 'SKG', name: 'Thessaloniki Airport', koName: '테살로니키공항', city: 'Thessaloniki', koCity: '테살로니키', country: 'Greece' },
+            { code: 'BKI', name: 'Kota Kinabalu International Airport', koName: '코타키나발루 국제공항', city: 'Kota Kinabalu', koCity: '코타키나발루', country: 'Malaysia' },
+            { code: 'PEN', name: 'Penang International Airport', koName: '페낭 국제공항', city: 'Penang', koCity: '페낭', country: 'Malaysia' },
+            { code: 'REP', name: 'Siem Reap International Airport', koName: '시엠립 국제공항', city: 'Siem Reap', koCity: '시엠립', country: 'Cambodia' },
+            { code: 'UBN', name: 'Ulaanbaatar Chinggis Khaan International Airport', koName: '울란바토르 국제공항', city: 'Ulaanbaatar', koCity: '울란바토르', country: 'Mongolia' },
+            { code: 'SXJ', name: 'Srinagar International Airport', koName: '스리나가르 국제공항', city: 'Srinagar', koCity: '스리나가르', country: 'India' },
+            { code: 'LUX', name: 'Luxembourg Airport', koName: '룩셈부르크공항', city: 'Luxembourg', koCity: '룩셈부르크', country: 'Luxembourg' },
+            { code: 'BER', name: 'Berlin Brandenburg Airport', koName: '베를린 브란덴부르크공항', city: 'Berlin', koCity: '베를린', country: 'Germany' },
+            { code: 'PRG', name: 'Václav Havel Airport Prague', koName: '프라하 공항', city: 'Prague', koCity: '프라하', country: 'Czech Republic' },
+            { code: 'BUD', name: 'Budapest Ferenc Liszt International Airport', koName: '부다페스트 국제공항', city: 'Budapest', koCity: '부다페스트', country: 'Hungary' },
+            { code: 'MFM', name: 'Macau International Airport', koName: '마카오 국제공항', city: 'Macau', koCity: '마카오', country: 'China' },
+            { code: 'ZYL', name: 'Zhengzhou Xinzheng International Airport', koName: '정저우 신정 국제공항', city: 'Zhengzhou', koCity: '정저우', country: 'China' },
+            { code: 'WUH', name: 'Wuhan Tianhe International Airport', koName: '우한 국제공항', city: 'Wuhan', koCity: '우한', country: 'China' },
+            { code: 'XIY', name: 'Xian Xianyang International Airport', koName: '시안 국제공항', city: 'Xian', koCity: '시안', country: 'China' },
+            { code: 'KMG', name: 'Kunming Changshui International Airport', koName: '쿤밍 국제공항', city: 'Kunming', koCity: '쿤밍', country: 'China' },
+            { code: 'CTU', name: 'Chengdu Shuangliu International Airport', koName: '청두 국제공항', city: 'Chengdu', koCity: '청두', country: 'China' },
+            { code: 'CNX', name: 'Chiang Mai International Airport', koName: '치앙마이 국제공항', city: 'Chiang Mai', koCity: '치앙마이', country: 'Thailand' },
+            { code: 'VTE', name: 'Wattay International Airport', koName: '비엔티안 국제공항', city: 'Vientiane', koCity: '비엔티안', country: 'Laos' },
+            { code: 'RGN', name: 'Yangon International Airport', koName: '양곤 국제공항', city: 'Yangon', koCity: '양곤', country: 'Myanmar' },
+            { code: 'MDL', name: 'Mandalay International Airport', koName: '만달레이 국제공항', city: 'Mandalay', koCity: '만달레이', country: 'Myanmar' }
         ];
 
         function createAirportLabel(airport) {
-            return `${airport.code} · ${airport.city}, ${airport.country} — ${airport.name}`;
+            const koInfo = airport.koName ? `${airport.koName} (${airport.koCity})` : '';
+            const enInfo = `${airport.name} (${airport.city}, ${airport.country})`;
+            return koInfo ? `${airport.code} · ${koInfo} / ${enInfo}` : `${airport.code} · ${enInfo}`;
         }
 
         function searchAirports(query) {
@@ -292,7 +313,9 @@
                 return airport.code.includes(normalized)
                     || airport.name.toUpperCase().includes(normalized)
                     || airport.city.toUpperCase().includes(normalized)
-                    || airport.country.toUpperCase().includes(normalized);
+                    || airport.country.toUpperCase().includes(normalized)
+                    || (airport.koName && airport.koName.includes(query))
+                    || (airport.koCity && airport.koCity.includes(query));
             }).slice(0, 20);
         }
 
@@ -313,9 +336,11 @@
             results.forEach(airport => {
                 const item = document.createElement('div');
                 item.className = 'airport-item';
+                const koInfo = airport.koName ? `<span style="color: #333;">${airport.koName} (${airport.koCity})</span><br>` : '';
+                const enInfo = `<span style="color: #666; font-size: 0.9em;">${airport.city}, ${airport.country} — ${airport.name}</span>`;
                 item.innerHTML = `
                     <span class="airport-code">${airport.code}</span>
-                    <span class="airport-details">${airport.city}, ${airport.country} — ${airport.name}</span>
+                    <span class="airport-details">${koInfo}${enInfo}</span>
                 `;
                 item.addEventListener('mousedown', function (event) {
                     event.preventDefault();
@@ -389,15 +414,30 @@
                 return;
             }
 
-            const bookingUrl = `https://flights.booking.com/flights/${origin}.CITY-${dest}.CITY/?type=ROUNDTRIP&adults=1&cabinClass=ECONOMY&depart=${depDate}&return=${retDate}&stops=0&sort=CHEAPEST`;
-            const skyscannerUrl = `https://www.skyscanner.co.kr/transport/flights/${origin}/${dest}/${depDate.replace(/-/g, '').slice(2)}/${retDate.replace(/-/g, '').slice(2)}/?adults=1&stops=direct`;
-            const naverUrl = `https://flight.naver.com/flights/international/${origin}-${dest}-${depDate.replace(/-/g, '')}/${dest}-${origin}-${retDate.replace(/-/g, '')}?adults=1&isDirect=true`;
-            const googleSimpleUrl = `https://www.google.com/travel/flights?q=Flights%20to%20${dest}%20from%20${origin}%20on%20${depDate}%20through%20${retDate}%20oneway=false%20stops=0`;
+            // 날짜 포맷 변환
+            const depDateYYYYMMDD = depDate.replace(/-/g, '');
+            const retDateYYYYMMDD = retDate.replace(/-/g, '');
+            const depDateYYMMDD = depDate.replace(/-/g, '').slice(2);
+            const retDateYYMMDD = retDate.replace(/-/g, '').slice(2);
 
-            window.open(bookingUrl, '_blank');
-            window.open(skyscannerUrl, '_blank');
-            window.open(naverUrl, '_blank');
-            window.open(googleSimpleUrl, '_blank');
+            console.log('검색 정보:', { origin, dest, depDate, retDate });
+
+            // 각 사이트별로 별도의 윈도우에서 열기
+            const bookingUrl = `https://flights.booking.com/flights/${origin}.CITY-${dest}.CITY/?type=ROUNDTRIP&adults=1&cabinClass=ECONOMY&depart=${depDate}&return=${retDate}&stops=0&sort=CHEAPEST`;
+            console.log('부킹닷컴:', bookingUrl);
+            window.open(bookingUrl, 'booking_' + Date.now());
+
+            const naverUrl = `https://flight.naver.com/flights/search?type=round&departure=${origin}&arrival=${dest}&startDate=${depDateYYYYMMDD}&returnDate=${retDateYYYYMMDD}&adult=1&child=0&infant=0&isDirect=true`;
+            console.log('네이버:', naverUrl);
+            window.open(naverUrl, 'naver_' + Date.now());
+
+            const skyscannerUrl = `https://www.skyscanner.co.kr/transport/flights/${origin}/${dest}/${depDateYYMMDD}/${retDateYYMMDD}`;
+            console.log('스카이스캐너:', skyscannerUrl);
+            window.open(skyscannerUrl, 'skyscanner_' + Date.now());
+
+            const googleUrl = `https://www.google.com/travel/flights?q=Flights+from+${origin}+to+${dest}+on+${depDate}+back+${retDate}`;
+            console.log('구글:', googleUrl);
+            window.open(googleUrl, 'google_' + Date.now());
         }
 
         document.addEventListener('DOMContentLoaded', function () {
