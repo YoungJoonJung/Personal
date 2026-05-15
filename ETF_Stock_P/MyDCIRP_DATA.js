@@ -312,5 +312,29 @@ window.MyDCIRP_DATA = {
       "type": "공격",
       "buyDate": "2026-01-12"
     }
+  ],
+  "키움증권": [
+    {
+      "name": "PLUS K방산",
+      "code": "449450",
+      "currentPrice": "72700",
+      "currentCompare": "+810",
+      "currentRate": "+1.13",
+      "buyPrice": "80,360",
+      "quantity": "125",
+      "type": "공격",
+      "buyDate": "2026-03-04"
+    },
+    {
+      "name": "HLB테라퓨틱스",
+      "code": "115450",
+      "currentPrice": "14725",
+      "currentCompare": "+135",
+      "currentRate": "+0.93",
+      "buyPrice": "13,766",
+      "quantity": "478",
+      "type": "공격",
+      "buyDate": "2019-01-12"
+    }
   ]
 };
