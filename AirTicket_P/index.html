@@ -40,6 +40,7 @@
             gap: 0.5rem;
             font-weight: normal;
             white-space: nowrap;
+            flex-shrink: 0;
         }
 
         label {
@@ -444,6 +445,8 @@
             }
         }
 
+        // Chrome 시크릿창은 웹페이지 자바스크립트로 강제 실행할 수 없습니다.
+        // 대신 새 탭으로 열도록 설정합니다.
         function searchFlights() {
             const originValue = document.getElementById('origin').value;
             const destValue = document.getElementById('destination').value;
@@ -452,6 +455,7 @@
             const depDate = document.getElementById('depDate').value;
             const retDate = document.getElementById('retDate').value;
             const tripType = document.getElementById('oneway').checked ? 'ONEWAY' : 'ROUNDTRIP';
+            const tripTypeLower = tripType === 'ROUNDTRIP' ? 'roundtrip' : 'oneway';
 
             if (!origin || !dest || !depDate || (tripType === 'ROUNDTRIP' && !retDate)) {
                 alert('모든 정보를 입력해주세요. 공항 검색 결과에서 공항을 선택하거나 IATA 코드를 입력하세요.');
@@ -461,30 +465,32 @@
             const depDateYYYYMMDD = depDate.replace(/-/g, '');
             const depDateYYMMDD = depDateYYYYMMDD.slice(2);
             const retDateYYYYMMDD = retDate ? retDate.replace(/-/g, '') : '';
-            const retDateYYMMDD = retDateYYYYMMDD ? retDateYYYYMMDD.slice(2) : '';
 
             console.log('검색 정보:', { origin, dest, depDate, retDate, tripType });
 
-            const bookingUrl = `https://flights.booking.com/flights/${origin}.CITY-${dest}.CITY/?origin=${origin}&destination=${dest}&type=${tripType}&adults=1&cabinClass=ECONOMY&depart=${depDate}${tripType === 'ROUNDTRIP' ? `&return=${retDate}` : ''}&stops=0&sort=CHEAPEST`;
+            const skyscannerUrl = tripType === 'ROUNDTRIP'
+                ? `https://www.skyscanner.co.kr/transport/flights/${origin.toLowerCase()}/${dest.toLowerCase()}/${depDateYYMMDD}/?adultsv2=1&cabinclass=economy&childrenv2=&inboundaltsenabled=false&outboundaltsenabled=false&preferdirects=true&rtn=1#/results`
+                : `https://www.skyscanner.co.kr/transport/flights/${origin.toLowerCase()}/${dest.toLowerCase()}/${depDateYYMMDD}/?adultsv2=1&cabinclass=economy&childrenv2=&inboundaltsenabled=false&outboundaltsenabled=false&preferdirects=true&rtn=0#/results`;
+            console.log('스카이스캐너:', skyscannerUrl);
+            window.open(skyscannerUrl, '_blank', 'noopener,noreferrer');
+
+            const bookingUrl = tripType === 'ROUNDTRIP'
+                ? `https://flights.booking.com/flights/${origin}.CITY-${dest}.AIRPORT/?type=ROUNDTRIP&adults=1&cabinClass=ECONOMY&children=&from=${origin}.CITY&to=${dest}.AIRPORT&stops=0&depart=${depDate}&return=${retDate}&sort=CHEAPEST&travelPurpose=leisure`
+                : `https://flights.booking.com/flights/${origin}.CITY-${dest}.AIRPORT/?type=ONEWAY&adults=1&cabinClass=ECONOMY&children=&from=${origin}.CITY&to=${dest}.AIRPORT&stops=0&depart=${depDate}&sort=CHEAPEST&travelPurpose=leisure`;
             console.log('부킹닷컴:', bookingUrl);
-            window.open(bookingUrl, 'booking_' + Date.now());
+            window.open(bookingUrl, '_blank', 'noopener,noreferrer');
 
             const naverUrl = tripType === 'ROUNDTRIP'
-                ? `https://flight.naver.com/flights/international/${origin}:city-${dest}:city-${depDateYYYYMMDD}/${dest}:city-${origin}:city-${retDateYYYYMMDD}?adult=1&fareType=Y&isDirect=true&trip=${tripType.toLowerCase()}`
-                : `https://flight.naver.com/flights/international/${origin}:city-${dest}:city-${depDateYYYYMMDD}?adult=1&fareType=Y&isDirect=true&trip=${tripType.toLowerCase()}`;
+                ? `https://flight.naver.com/flights/international/${origin}:city-${dest}:city-${depDateYYYYMMDD}/${dest}:city-${origin}:city-${retDateYYYYMMDD}?adult=1&isDirect=true&fareType=Y`
+                : `https://flight.naver.com/flights/international/${origin}:city-${dest}:city-${depDateYYYYMMDD}?adult=1&isDirect=true&fareType=Y`;
             console.log('네이버:', naverUrl);
-            window.open(naverUrl, 'naver_' + Date.now());
+            window.open(naverUrl, '_blank', 'noopener,noreferrer');
 
-            const skyscannerUrl = `https://www.skyscanner.co.kr/transport/flights/${origin.toLowerCase()}/${dest.toLowerCase()}/${depDateYYMMDD}/?adultsv2=1&cabinclass=economy&childrenv2=&inboundaltsenabled=false&outboundaltsenabled=false&preferdirects=true&rtn=${tripType === 'ROUNDTRIP' ? '1' : '0'}#/results`;
-            console.log('스카이스캐너:', skyscannerUrl);
-            window.open(skyscannerUrl, 'skyscanner_' + Date.now());
-
-            const googleQuery = tripType === 'ROUNDTRIP'
-                ? encodeURIComponent(`Round-trip flights from ${origin} to ${dest} on ${depDate} return ${retDate}`)
-                : encodeURIComponent(`One-way flights from ${origin} to ${dest} on ${depDate}`);
-            const googleUrl = `https://www.google.com/travel/flights?hl=ko&gl=KR&q=${googleQuery}`;
+            const googleUrl = tripType === 'ROUNDTRIP'
+                ? 'https://www.google.com/travel/flights/search?tfs=CBwQAholEgoyMDI2LTA1LTIyKABqDAgCEggvbS8waHNxZnIHCAESA0NHSxolEgoyMDI2LTA1LTMxKABqBwgBEgNDR0tyDAgCEggvbS8waHNxZkABSAFwAYIBCwj___________8BmAEB&tfu=EgYIAhAAGAA&hl=ko&gl=KR'
+                : `https://www.google.com/travel/flights/search?hl=ko&gl=KR&tfu=EgYIAhAAGAA&q=${encodeURIComponent(`cheapest direct flights from ${origin} to ${dest} on ${depDate}`)}`;
             console.log('구글:', googleUrl);
-            window.open(googleUrl, 'google_' + Date.now());
+            window.open(googleUrl, '_blank', 'noopener,noreferrer');
         }
 
         document.addEventListener('DOMContentLoaded', function () {
